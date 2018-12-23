@@ -5,18 +5,7 @@ import tick from "./gameLogic";
 import withStyles from "@material-ui/core/styles/withStyles";
 import {drawerWidth} from "./constants";
 import classNames from 'classnames'
-
-function createEmptyBoardState(rows, columns) {
-    let emptyBoard = [];
-    for (let i = 0; i < rows; i++){
-        let newColum = [];
-        for (let j = 0; j < columns; j++){
-            newColum.push(false)
-        }
-        emptyBoard.push(newColum);
-    }
-    return emptyBoard;
-}
+import createEmptyBoardState from "./createEmptyBoardState";
 
 const styles = theme => ({
     content: {
@@ -50,17 +39,19 @@ class Board extends Component{
             childRefs.push(refRow);
         }
         let startBoard = createEmptyBoardState(props.rows, props.columns);
-        startBoard[3][4] = true;
-        startBoard[4][4] = true;
-        startBoard[5][4] = true;
+        // startBoard[3][4] = true;
+        // startBoard[4][4] = true;
+        // startBoard[5][4] = true;
         this.state = {
             boardState: startBoard
             , rows: props.rows
             , columns: props.columns
             , childRefs
+            , previewShape: props.previewShape
+            , selectedShape: props.selectedShape
+            , previewState: null
             // , newGame: true
         };
-
         this.props.setBoardfuncs(this.onTick, this.newBoard);
     }
 
@@ -74,9 +65,9 @@ class Board extends Component{
             childRefs.push(refRow);
         }
         let startBoard = createEmptyBoardState(rows, columns);
-        startBoard[3][4] = true;
-        startBoard[4][4] = true;
-        startBoard[5][4] = true;
+        // startBoard[3][4] = true;
+        // startBoard[4][4] = true;
+        // startBoard[5][4] = true;
         this.setState({
             boardState: startBoard
             , rows
@@ -85,6 +76,25 @@ class Board extends Component{
             // , newGame: true
         });
     };
+
+    componentWillReceiveProps({selectedShape, previewShape}, context){
+        let previewState = null;
+        if (previewShape !== null) {
+            let boardState = this.state.boardState;
+            let startRow = Math.floor(boardState.length/2) - previewShape.xMin;
+            let startCol = Math.floor(boardState[0].length/2) - previewShape.yMin;
+            let newBoard = boardState.map(row => row.map(tile => tile));
+            for(let i =  startRow, k = 0; i < startRow + previewShape.rows; i++, k++){
+                for (let j = startCol, h = 0; j < startCol + previewShape.columns; j++, h++){
+                    newBoard[i][j] = previewShape.pattern[k][h];
+                }
+            }
+            previewState = newBoard;
+        }
+
+        this.setState({previewShape, selectedShape, previewState});
+    }
+
 
     onTick = () => {
         let {boardState} = this.state;
@@ -111,17 +121,15 @@ class Board extends Component{
     };
 
     render(){
-        const playing = this.props.isPlaying();
-        const {classes } = this.props;
-        console.log('rerendering');
+        const {classes, isPlaying } = this.props;
+        console.log('rendering board');
         return (
             <div className={classNames(classes.content, {
-                [classes.contentShift]: !playing
+                [classes.contentShift]: !isPlaying
             })}>
                 <Grid
                     container
-                    direction="column"
-                >
+                    direction="column">
                     {this.state.childRefs.map((row, i) =>
                         (<Grid key={i} container direction="row" wrap='nowrap' >
                             {row.map((ref, j) => (
@@ -130,7 +138,9 @@ class Board extends Component{
                                     key={`${i}${j}`}
                                     i={i}
                                     j={j}
-                                    alive={this.state.boardState[i][j]}/>)
+                                    isPlaying={isPlaying}
+                                    alive={(this.state.previewState !== null) ?
+                                        this.state.previewState[i][j] : this.state.boardState[i][j]}/>)
                             )}
                         </Grid>))
                     }

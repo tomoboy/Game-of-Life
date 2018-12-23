@@ -63,8 +63,8 @@ class ControlBoard extends Component{
 
     speedChange = ({target}) => {
         this.setState({tickTime: target.value});
-        return new Promise(resolve => setTimeout(resolve, 100)).then(() => { //Hack to make setinterval work properly
-                if (this.props.isPlaying()) {
+        return new Promise(resolve => setTimeout(resolve, 300)).then(() => { //Hack to make setinterval work properly
+                if (this.props.isPlaying) {
                     clearInterval(this.state.intervalId);
                     this.startTicking();
                 }
@@ -80,18 +80,17 @@ class ControlBoard extends Component{
     };
 
     render(){
-        const { classes } = this.props;
-        const playing = this.props.isPlaying();
+        const { classes, isPlaying } = this.props;
         return (
             <AppBar
                 color='default'
                 position='fixed'
                 className={classNames(classes.appBar, {
-                    [classes.appBarShift]: !playing,
+                    [classes.appBarShift]: !isPlaying,
                 })}>
-                <Toolbar style={{marginTop: '5px'}} disableGutters={playing}>
+                <Toolbar style={{marginTop: '5px'}} disableGutters={isPlaying}>
                     <Button variant='contained'
-                            disabled={playing} onClick={this.onTick}>
+                            disabled={isPlaying} onClick={this.onTick}>
                         <Typography variant='h6' >Tick</Typography>
                     </Button>
                     <form autoComplete='off'>
@@ -116,7 +115,7 @@ class ControlBoard extends Component{
                             </Select>
                         </FormControl>
                     </form>
-                    {(!playing) ?
+                    {(!isPlaying) ?
                         < IconButton color='inherit' onClick={this.startTicking}>
                             <PlayArrow/>
                         </IconButton>

@@ -11,11 +11,12 @@ export default class ShapesList extends Component{
     };
 
     onClick = (shape, selectedIndex) => {
-        console.log(shape);
-        this.setState({selectedIndex})
+        this.setState({selectedIndex});
+        this.props.setSelectedShape(shape);
     };
 
     render(){
+        const { setPreviewShape } = this.props;
         return (
             <List subheader={<li/>}>
                 {Object.keys(shapes).map(category => (
@@ -26,6 +27,8 @@ export default class ShapesList extends Component{
                                     <ListItem
                                         button
                                         onClick={() => this.onClick(shape, i)}
+                                        onMouseOver={() => setPreviewShape(shape)}
+                                        onMouseLeave={() => setPreviewShape(null)}
                                         key={shape.name}
                                         selected={this.state.selectedIndex === i}>
                                         <ListItemText primary={shape.name}/>

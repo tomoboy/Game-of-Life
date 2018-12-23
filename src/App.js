@@ -17,13 +17,14 @@ class App extends Component {
             , playing: false
             , boardTick: null
             , newBoard: null
+            , selectedShape: null
+            , previewShape: null
         };
     }
 
     tick = () => {
         this.state.boardTick()
     };
-
 
     setBoardfuncs = (boardTick, newBoard) => this.setState({boardTick, newBoard});
 
@@ -32,33 +33,44 @@ class App extends Component {
         this.state.newBoard(rows, columns)
     };
 
+    setSelectedShape = shape => this.setState({previewShape: null, selectedShape: shape});
+
     togglePlay = () => {
-        this.setState({playing: !this.state.playing})
+        const {playing} = this.state;
+        if (!playing) {
+            return new Promise(resolve => setTimeout(resolve, 300)).then(() => { //Adding a slight delay
+                this.setState({playing: true})
+            });
+        } else {
+            this.setState({playing: false})
+        }
     };
 
-    playStatus = () => this.state.playing;
-
     render() {
-        const {rows, columns } = this.state;
+        const {rows, columns, playing, previewShape, selectedShape } = this.state;
 
         return <div style={{display: 'flex'}}>
             <ControlBoard
+                isPlaying={playing}
                 onTick={this.tick}
-                isPlaying={this.playStatus}
                 togglePlay={this.togglePlay}
             />
             <CssBaseline/>
             <SideBar
-                isPlaying={this.playStatus}
-                setBoardSize={this.setBoardSize}
+                isPlaying={playing}
                 rows={rows}
                 columns={columns}
+                setBoardSize={this.setBoardSize}
+                setPreviewShape={shape => this.setState({previewShape: shape})}
+                setSelectedShape={this.setSelectedShape}
             />
             <Board
+                isPlaying={playing}
                 rows={rows}
-                isPlaying={this.playStatus}
-                setBoardfuncs={this.setBoardfuncs}
-                columns={columns}/>
+                columns={columns}
+                previewShape={previewShape}
+                selectedShape={selectedShape}
+                setBoardfuncs={this.setBoardfuncs}/>
         </div>
   }
 }
