@@ -95,14 +95,14 @@ class Board extends Component{
         // }
         let newBoard = tick(boardState, createEmptyBoardState(this.state.rows, this.state.columns));
         let unchanged = true;
-        this.state.childRefs.forEach((refRow, i) =>
-            refRow.forEach((child, j) => {
-                if (boardState[i][j] !== newBoard[i][j]){
-                    child.current.setAliveStatus(newBoard[i][j]);
-                    unchanged = false;
-                }
-            })
-        );
+        // this.state.childRefs.forEach((refRow, i) =>
+        //     refRow.forEach((child, j) => {
+        //         if (boardState[i][j] !== newBoard[i][j]){
+        //             child.current.setAliveStatus(newBoard[i][j]);
+        //             unchanged = false;
+        //         }
+        //     })
+        // );
         this.setState({
             boardState: newBoard
             , newGame: false
@@ -123,7 +123,7 @@ class Board extends Component{
                     direction="column"
                 >
                     {this.state.childRefs.map((row, i) =>
-                        (<Grid key={i} container direction="row" >
+                        (<Grid key={i} container direction="row" wrap='nowrap' >
                             {row.map((ref, j) => (
                                 <Tile
                                     ref={ref}

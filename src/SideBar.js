@@ -6,6 +6,8 @@ import Grid from "@material-ui/core/Grid/Grid";
 import Typography from "@material-ui/core/Typography/Typography";
 import NumberInput from "./NumberInput";
 import Button from "@material-ui/core/Button/Button";
+import ShapesList from "./ShapesList";
+import Paper from "@material-ui/core/Paper/Paper";
 
 const styles = theme => ({
     drawer: {
@@ -51,10 +53,9 @@ class SideBar extends Component{
                         <Typography variant='h6'>Edit controls</Typography>
                     </Grid>
                     <Grid item>
-                        <Typography variant='subtitle1'>boardSize</Typography>
-                    </Grid>
-                    <Grid item>
-                        <Grid container direction='row'>
+                        <Paper style={{margin: '5px', padding: '5px'}}>
+                        <Typography variant='subtitle1'>board size</Typography>
+                            <Grid container direction='row'>
                             <Grid item>
                             <NumberInput
                                 label='rows'
@@ -68,13 +69,20 @@ class SideBar extends Component{
                                 onChange={value => this.setState({columns: parseInt(value)})}/>
                             </Grid>
                         </Grid>
-                    </Grid>
                     <Grid item>
                         <Button
                             variant='contained'
                             onClick={this.newBoard}>
                             New Board
                         </Button>
+                    </Grid>
+                        </Paper>
+                    </Grid>
+                     <Grid item>
+                         <Paper style={{margin: '5px', padding: '5px'}}>
+                             <Typography variant='subtitle1'>Shapes </Typography>
+                             <ShapesList/>
+                         </Paper>
                     </Grid>
                 </Grid>
             </Drawer>
