@@ -9,8 +9,8 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 class App extends Component {
     constructor(props) {
         super(props);
-        let rows = 10;
-        let columns = 10;
+        let rows = 20;
+        let columns = 20;
         this.state = {
             rows
             , columns

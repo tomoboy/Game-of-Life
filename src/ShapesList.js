@@ -10,6 +10,10 @@ export default class ShapesList extends Component{
         selectedIndex: 0
     };
 
+    componentWillMount(){
+        this.onClick(shapes['Still lives'][0], 0)
+    }
+
     onClick = (shape, selectedIndex) => {
         this.setState({selectedIndex});
         this.props.setSelectedShape(shape);
@@ -17,6 +21,7 @@ export default class ShapesList extends Component{
 
     render(){
         const { setPreviewShape } = this.props;
+        const { selectedIned} = this.state;
         return (
             <List subheader={<li/>}>
                 {Object.keys(shapes).map(category => (
