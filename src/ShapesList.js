@@ -4,6 +4,13 @@ import shapes from './shapes/shapes'
 import ListSubheader from "@material-ui/core/ListSubheader/ListSubheader";
 import ListItem from "@material-ui/core/ListItem/ListItem";
 import ListItemText from "@material-ui/core/ListItemText/ListItemText";
+import Tooltip from "../node_modules/@material-ui/core/Tooltip/Tooltip";
+
+const listStyle = {
+    maxHeight: 300
+    , position: 'relative'
+    , overflow: 'auto'
+};
 
 export default class ShapesList extends Component{
     state = {
@@ -20,24 +27,41 @@ export default class ShapesList extends Component{
     };
 
     render(){
-        const { setPreviewShape } = this.props;
-        const { selectedIned} = this.state;
+        const { setPreviewShape, rows, columns } = this.props;
+        const { selectedIndex } = this.state;
         return (
-            <List subheader={<li/>}>
+            <List subheader={<li />} style={listStyle}>
                 {Object.keys(shapes).map(category => (
                     <li key={category}>
                         <ul>
                             <ListSubheader>{category}</ListSubheader>
                                 {shapes[category].map((shape, i) => (
-                                    <ListItem
-                                        button
-                                        onClick={() => this.onClick(shape, i)}
-                                        onMouseOver={() => setPreviewShape(shape)}
-                                        onMouseLeave={() => setPreviewShape(null)}
-                                        key={shape.name}
-                                        selected={this.state.selectedIndex === i}>
-                                        <ListItemText primary={shape.name}/>
-                                    </ListItem>
+                                    (shape.rows > rows || shape.columns > columns) ?
+                                        <Tooltip title={`This shape is too big for the board.
+                                         This shape needs to have at least ${shape.rows} rows and ${shape.columns} columns`}>
+                                            <span>
+                                                <ListItem
+                                                    button
+                                                    onClick={() => this.onClick(shape, i)}
+                                                    disabled={true}
+                                                    onMouseOver={() => setPreviewShape(shape)}
+                                                    onMouseLeave={() => setPreviewShape(null)}
+                                                    key={shape.name}
+                                                    selected={selectedIndex}>
+                                                    <ListItemText primary={shape.name}/>
+                                                </ListItem>
+                                            </span>
+                                        </Tooltip>
+                                        :
+                                        <ListItem
+                                            button
+                                            onClick={() => this.onClick(shape, i)}
+                                            onMouseOver={() => setPreviewShape(shape)}
+                                            onMouseLeave={() => setPreviewShape(null)}
+                                            key={shape.name}
+                                            selected={selectedIndex}>
+                                            <ListItemText primary={shape.name}/>
+                                        </ListItem>
                                 ))}
                         </ul>
                     </li>

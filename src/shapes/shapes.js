@@ -5,6 +5,12 @@ import beehive from "./beehive";
 import loaf from "./loaf";
 import boat from "./boat";
 import tub from "./tub";
+import tTetromino from "./tTetromino";
+import straightPolyomino from "./straightPolyomino";
+import glider from "./glider";
+import lightweightSpaceShip from "./lightweightSpaceShip";
+import fPentomino from "./fPentomino";
+import acorn from "./acorn";
 
 const capitalize = (word) => word.charAt(0).toUpperCase() + word.slice(1);
 
@@ -31,6 +37,12 @@ let shapes = [
     , loaf
     , boat
     , tub
+    , tTetromino
+    , straightPolyomino
+    , glider
+    , lightweightSpaceShip
+    , fPentomino
+    , acorn
 ];
 
 export default _.reduce(shapes.map(calculateProperties), (accumulator, current) => {

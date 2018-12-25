@@ -45,7 +45,7 @@ class ControlBoard extends Component{
         this.state = {
             intervalId: 0
             , defaultTick: 500
-            , tickTime: 500
+            , tickTime: 100
             , generation: 0
         };
     }
@@ -97,6 +97,7 @@ class ControlBoard extends Component{
                         <FormControl style={{margin:'5px'}}>
                             <InputLabel ref={ref => {this.inputLabelref = ref}}  htmlFor='speed-simple'>   Speed</InputLabel>
                             <Select
+                                disabled={isPlaying}
                                 value={this.state.tickTime}
                                 onChange={this.speedChange}
                                 input={

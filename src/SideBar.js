@@ -34,7 +34,8 @@ class SideBar extends Component{
                 <Grid
                     container
                     direction='column'
-                    alignItems='center'
+                    wrap={'nowrap'}
+                    alignItems='flex-start'
                 >
                     <Grid item>
                         <Typography variant='h6'>Edit controls</Typography>
@@ -49,6 +50,8 @@ class SideBar extends Component{
                          <Paper style={{margin: '5px', padding: '5px'}}>
                              <Typography variant='subtitle1'>Shapes </Typography>
                              <ShapesList
+                                 rows={rows}
+                                 columns={columns}
                                  setPreviewShape={setPreviewShape}
                                  setSelectedShape={setSelectedShape}/>
                          </Paper>
