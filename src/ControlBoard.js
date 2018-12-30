@@ -45,7 +45,7 @@ class ControlBoard extends Component{
         this.state = {
             intervalId: 0
             , defaultTick: 500
-            , tickTime: 100
+            , tickTime: 250
             , generation: 0
         };
     }

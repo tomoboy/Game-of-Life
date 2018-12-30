@@ -37,10 +37,28 @@ class Board extends Component{
             , columns: props.columns
             , previewShape: props.previewShape
             , selectedShape: props.selectedShape
-            , previewState: null
+            , childRefs: this.childRefBoard(props.rows, props.columns)
+            , lastPreview: []
         };
         this.props.setBoardfuncs(this.onTick, this.newBoard);
     }
+
+    childRefBoard = (rows, columns) => {
+        let childRefs = [];
+        for (let i = 0; i < rows; i++){
+            childRefs.push([]);
+            for (let j = 0; j < columns; j++)
+                childRefs[i].push(React.createRef());
+        }
+        return childRefs;
+    };
+
+    removeLastPreview = () => {
+        let {childRefs, lastPreview} = this.state;
+        if (lastPreview.length > 0){
+            lastPreview.forEach(({i, j}) => childRefs[i][j].current.setPreview(false))
+        }
+    };
 
     newBoard = (rows, columns) => {
         let boardState = createEmptyBoardState(rows, columns);
@@ -48,24 +66,26 @@ class Board extends Component{
             boardState
             , rows
             , columns
+            , childRefs: this.childRefBoard(rows, columns)
         });
     };
 
     componentWillReceiveProps({selectedShape, previewShape}, context){
-        let previewState = null;
-        if (previewShape !== null) {
-            let {boardState} = this.state;
+        let {boardState, childRefs, lastPreview} = this.state;
+        this.removeLastPreview();
+        lastPreview = [];
+        if (previewShape !== null){
             let startRow = Math.floor(boardState.length/2) - previewShape.xMin;
             let startCol = Math.floor(boardState[0].length/2) - previewShape.yMin;
-            let newBoard = boardState.map(row => row.map(tile => tile));
             for(let i =  startRow, k = 0; i < startRow + previewShape.rows; i++, k++){
                 for (let j = startCol, h = 0; j < startCol + previewShape.columns; j++, h++){
-                    newBoard[i][j] = previewShape.pattern[k][h];
+                    let alive = previewShape.pattern[k][h];
+                    lastPreview.push({i, j, alive});
+                    childRefs[i][j].current.setPreview(alive);
                 }
             }
-            previewState = newBoard;
         }
-        this.setState({previewShape, selectedShape, previewState});
+        this.setState({previewShape, selectedShape, lastPreview});
     }
 
 
@@ -80,21 +100,27 @@ class Board extends Component{
     };
 
     onTileClick = () => {
-        const {previewState} = this.state;
-        this.setState({boardState: previewState})
+        const {lastPreview, boardState} = this.state;
+        lastPreview.forEach(({i, j, alive}) => boardState[i][j] = alive);
+        this.setState({boardState, lastPreview: []})
     };
 
     onTileHover = (i, j) => {
-        let {boardState, selectedShape} = this.state;
+        let {childRefs, boardState, selectedShape, lastPreview} = this.state;
         let startRow = i - selectedShape.xMin;
         let startCol = j - selectedShape.yMin;
-        let newBoard = boardState.map(row => row.map(tile => tile));
+        this.removeLastPreview();
+        lastPreview = [];
         for(let i =  startRow, k = 0; i < startRow + selectedShape.rows; i++, k++){
             for (let j = startCol, h = 0; j < startCol + selectedShape.columns; j++, h++){
-                newBoard[this.wrap(i, newBoard)][this.wrap(j, newBoard[0])] = selectedShape.pattern[k][h];
+                let ii = this.wrap(i, boardState);
+                let jj = this.wrap(j, boardState);
+                let alive = selectedShape.pattern[k][h];
+                lastPreview.push({i: ii, j: jj, alive});
+                childRefs[ii][jj].current.setPreview(alive)
             }
         }
-        this.setState({previewState: newBoard});
+        this.setState({lastPreview});
     };
 
     onTick = () => {
@@ -104,9 +130,7 @@ class Board extends Component{
 
     render(){
         const {classes, isPlaying } = this.props;
-        const {previewState, boardState} = this.state;
-
-        let isPreview = previewState !== null;
+        const {childRefs, boardState} = this.state;
         return (
             <div className={classNames(classes.content, {
                 [classes.contentShift]: !isPlaying
@@ -114,18 +138,18 @@ class Board extends Component{
                 <Grid
                     container
                     direction="column">
-                    {((isPreview) ? previewState : boardState).map((row, i) =>
+                    {childRefs.map((row, i) =>
                         (<Grid key={i} container direction="row" wrap='nowrap' >
-                            {row.map((alive, j) => (
+                            {row.map((ref, j) => (
                                 <Tile
                                     key={`${i}${j}`}
                                     i={i}
                                     j={j}
+                                    ref={ref}
                                     onHover={this.onTileHover}
                                     onClick={this.onTileClick}
-                                    isPreview={isPreview}
                                     isPlaying={isPlaying}
-                                    alive={alive}/>)
+                                    alive={boardState[i][j]}/>)
                             )}
                         </Grid>))
                     }

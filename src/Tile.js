@@ -10,37 +10,34 @@ export default class Tile extends Component{
         }
     }
 
-    componentWillReceiveProps({alive, isPlaying, isPreview}, nextContext){
-        if (isPreview) {
-            this.setState({preview: alive})
-        } else {
-            this.setState({alive, isPlaying, preview: null})
-        }
+    componentWillReceiveProps({alive, isPlaying}, context){
+        this.setState({alive, isPlaying});
     }
+    setPreview = preview => this.setState({preview});
 
     render(){
-        const {i, j, isPreview, onHover, onClick} = this.props;
+        const { i, j, onHover, onClick } = this.props;
         const { alive, isPlaying, preview } = this.state;
 
         return (isPlaying) ?
-            <div
+            <svg
                 style={{
                     margin: '.5px'
                     , width: '8px'
                     , height: '8px'
                     , background: (alive) ? 'black' : 'transparent'
                 }}>
-            </div>
+            </svg>
             :
-            <div
+            <svg
                 onClick={onClick}
                 onMouseOver={() => onHover(i, j)}
                 style={{
                     margin: '.5px'
                     , width: '8px'
                     , height: '8px'
-                    , background: (alive || (isPreview && preview)) ? 'black' :'lightgrey'
+                    , background: (alive || preview) ? 'black' :'lightgrey'
                 }}>
-            </div>
+            </svg>
     }
 }
