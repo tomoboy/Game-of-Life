@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import Drawer from "@material-ui/core/Drawer/Drawer";
 import { withStyles } from '@material-ui/core/styles';
-import { drawerWidth } from './constants'
+import { DRAWER_WIDTH } from './constants'
 import Grid from "@material-ui/core/Grid/Grid";
 import Typography from "@material-ui/core/Typography/Typography";
 import ShapesList from "./ShapesList";
@@ -10,11 +10,11 @@ import BoardSizeControl from "./BoardSizeControl";
 
 const styles = theme => ({
     drawer: {
-        width: drawerWidth,
+        width: DRAWER_WIDTH,
         flexShrink: 0,
     },
     drawerPaper: {
-        width: drawerWidth,
+        width: DRAWER_WIDTH,
     },
 });
 

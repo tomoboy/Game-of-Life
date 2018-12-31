@@ -1,11 +1,10 @@
 import React, {Component} from 'react'
-import Grid from "@material-ui/core/Grid/Grid";
-import Tile from "./Tile";
 import tick from "./gameLogic";
 import withStyles from "@material-ui/core/styles/withStyles";
-import {drawerWidth} from "./constants";
+import {DRAWER_WIDTH} from "./constants";
 import classNames from 'classnames'
 import createEmptyBoardState from "./createEmptyBoardState";
+import BoardCanvas from "./BoardCanvas";
 
 const styles = theme => ({
     content: {
@@ -16,7 +15,7 @@ const styles = theme => ({
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.leavingScreen,
         }),
-        marginLeft: -drawerWidth,
+        marginLeft: -DRAWER_WIDTH,
     },
     contentShift: {
         transition: theme.transitions.create('margin', {
@@ -30,35 +29,18 @@ const styles = theme => ({
 class Board extends Component{
     constructor(props) {
         super(props);
-        let startBoard = createEmptyBoardState(props.rows, props.columns);
+        const { rows, columns, previewShape, selectedShape} = this.props;
+        let startBoard = createEmptyBoardState(rows, columns);
         this.state = {
             boardState: startBoard
-            , rows: props.rows
-            , columns: props.columns
-            , previewShape: props.previewShape
-            , selectedShape: props.selectedShape
-            , childRefs: this.childRefBoard(props.rows, props.columns)
-            , lastPreview: []
+            , rows
+            , columns
+            , previewShape
+            , selectedShape
+            , previewState: startBoard
         };
-        this.props.setBoardfuncs(this.onTick, this.newBoard);
+        this.props.setBoardfuncs(this.onTick);
     }
-
-    childRefBoard = (rows, columns) => {
-        let childRefs = [];
-        for (let i = 0; i < rows; i++){
-            childRefs.push([]);
-            for (let j = 0; j < columns; j++)
-                childRefs[i].push(React.createRef());
-        }
-        return childRefs;
-    };
-
-    removeLastPreview = () => {
-        let {childRefs, lastPreview} = this.state;
-        if (lastPreview.length > 0){
-            lastPreview.forEach(({i, j}) => childRefs[i][j].current.setPreview(false))
-        }
-    };
 
     newBoard = (rows, columns) => {
         let boardState = createEmptyBoardState(rows, columns);
@@ -66,26 +48,27 @@ class Board extends Component{
             boardState
             , rows
             , columns
-            , childRefs: this.childRefBoard(rows, columns)
+            , previewState: boardState
         });
     };
 
-    componentWillReceiveProps({selectedShape, previewShape}, context){
-        let {boardState, childRefs, lastPreview} = this.state;
-        this.removeLastPreview();
-        lastPreview = [];
-        if (previewShape !== null){
-            let startRow = Math.floor(boardState.length/2) - previewShape.xMin;
-            let startCol = Math.floor(boardState[0].length/2) - previewShape.yMin;
-            for(let i =  startRow, k = 0; i < startRow + previewShape.rows; i++, k++){
-                for (let j = startCol, h = 0; j < startCol + previewShape.columns; j++, h++){
-                    let alive = previewShape.pattern[k][h];
-                    lastPreview.push({i, j, alive});
-                    childRefs[i][j].current.setPreview(alive);
+    componentWillReceiveProps({selectedShape, rows, columns, previewShape}, context){// is called when hovering over a shape in sidebar
+        if (rows !== this.state.rows || columns !== this.state.columns ){ // make a new board
+            this.newBoard(rows, columns);
+        } else { // a new preview shape is hovered over
+            let {boardState} = this.state;
+            let previewState = boardState.map(row => row.map(tile => tile));
+            if (previewShape !== null){
+                let startRow = Math.floor(boardState.length/2) - previewShape.xMin;
+                let startCol = Math.floor(boardState[0].length/2) - previewShape.yMin;
+                for(let i =  startRow, k = 0; i < startRow + previewShape.rows; i++, k++){
+                    for (let j = startCol, h = 0; j < startCol + previewShape.columns; j++, h++){
+                        previewState[i][j] = previewShape.pattern[k][h];
+                    }
                 }
             }
+            this.setState({previewShape, selectedShape, previewState});
         }
-        this.setState({previewShape, selectedShape, lastPreview});
     }
 
 
@@ -100,27 +83,26 @@ class Board extends Component{
     };
 
     onTileClick = () => {
-        const {lastPreview, boardState} = this.state;
-        lastPreview.forEach(({i, j, alive}) => boardState[i][j] = alive);
-        this.setState({boardState, lastPreview: []})
+        const { previewState } = this.state;
+        this.setState({boardState: previewState})
     };
 
     onTileHover = (i, j) => {
-        let {childRefs, boardState, selectedShape, lastPreview} = this.state;
-        let startRow = i - selectedShape.xMin;
-        let startCol = j - selectedShape.yMin;
-        this.removeLastPreview();
-        lastPreview = [];
-        for(let i =  startRow, k = 0; i < startRow + selectedShape.rows; i++, k++){
-            for (let j = startCol, h = 0; j < startCol + selectedShape.columns; j++, h++){
-                let ii = this.wrap(i, boardState);
-                let jj = this.wrap(j, boardState);
-                let alive = selectedShape.pattern[k][h];
-                lastPreview.push({i: ii, j: jj, alive});
-                childRefs[ii][jj].current.setPreview(alive)
-            }
+        console.log('onhover');
+        if (!this.props.isPlaying) {
+            let {boardState, previewState, selectedShape} = this.state;
+            let startRow = i - selectedShape.xMin;
+            let startCol = j - selectedShape.yMin;
+            previewState = boardState.map(row => row.map(tile => tile));
+            for(let i =  startRow, k = 0; i < startRow + selectedShape.rows; i++, k++)
+                for (let j = startCol, h = 0; j < startCol + selectedShape.columns; j++, h++){
+                    let ii = this.wrap(i, boardState);
+                    let jj = this.wrap(j, boardState);
+                    let alive = selectedShape.pattern[k][h];
+                    previewState[ii][jj] = alive;
+                }
+            this.setState({previewState})
         }
-        this.setState({lastPreview});
     };
 
     onTick = () => {
@@ -130,30 +112,19 @@ class Board extends Component{
 
     render(){
         const {classes, isPlaying } = this.props;
-        const {childRefs, boardState} = this.state;
+        const {previewState, boardState, rows, columns} = this.state;
         return (
             <div className={classNames(classes.content, {
                 [classes.contentShift]: !isPlaying
             })}>
-                <Grid
-                    container
-                    direction="column">
-                    {childRefs.map((row, i) =>
-                        (<Grid key={i} container direction="row" wrap='nowrap' >
-                            {row.map((ref, j) => (
-                                <Tile
-                                    key={`${i}${j}`}
-                                    i={i}
-                                    j={j}
-                                    ref={ref}
-                                    onHover={this.onTileHover}
-                                    onClick={this.onTileClick}
-                                    isPlaying={isPlaying}
-                                    alive={boardState[i][j]}/>)
-                            )}
-                        </Grid>))
-                    }
-                </Grid>
+                <BoardCanvas
+                    rows={rows}
+                    columns={columns}
+                    onTileHover={this.onTileHover}
+                    boardState={(isPlaying) ? boardState : previewState}
+                    isPlaying={isPlaying}
+                    onClick={this.onTileClick}
+                />
             </div>
         )
     }

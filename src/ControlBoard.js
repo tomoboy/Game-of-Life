@@ -13,7 +13,7 @@ import InputLabel from "@material-ui/core/InputLabel/InputLabel";
 import OutlinedInput from "@material-ui/core/OutlinedInput/OutlinedInput";
 import withStyles from "@material-ui/core/styles/withStyles";
 import classNames from 'classnames';
-import { drawerWidth } from './constants'
+import { DRAWER_WIDTH } from './constants'
 
 
 
@@ -27,8 +27,8 @@ const styles = theme => ({
             duration: theme.transitions.duration.leavingScreen
         })},
     appBarShift: {
-        width: `calc(100% - ${drawerWidth}px)`,
-        marginLeft: drawerWidth,
+        width: `calc(100% - ${DRAWER_WIDTH}px)`,
+        marginLeft: DRAWER_WIDTH,
         transition: theme.transitions.create(['margin', 'width'], {
             easing: theme.transitions.easing.easeOut,
             duration: theme.transitions.duration.enteringScreen

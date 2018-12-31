@@ -16,7 +16,6 @@ class App extends Component {
             , columns
             , playing: false
             , boardTick: null
-            , newBoard: null
             , selectedShape: null
             , previewShape: null
         };
@@ -26,7 +25,7 @@ class App extends Component {
         this.state.boardTick()
     };
 
-    setBoardfuncs = (boardTick, newBoard) => this.setState({boardTick, newBoard});
+    setBoardfuncs = boardTick => this.setState({boardTick});
 
     setBoardSize = (rows, columns) => {
         this.setState({rows, columns});
@@ -49,7 +48,7 @@ class App extends Component {
     render() {
         const {rows, columns, playing, previewShape, selectedShape } = this.state;
 
-        return <div style={{display: 'flex'}}>
+        return <div style={{display: 'flex', backgroundColor: '#f5f5f5'}}>
             <ControlBoard
                 isPlaying={playing}
                 onTick={this.tick}
@@ -60,7 +59,7 @@ class App extends Component {
                 isPlaying={playing}
                 rows={rows}
                 columns={columns}
-                setBoardSize={this.setBoardSize}
+                setBoardSize={(rows, columns) => this.setState({rows, columns})}
                 setPreviewShape={shape => this.setState({previewShape: shape})}
                 setSelectedShape={this.setSelectedShape}
             />
