@@ -21,12 +21,13 @@ export default class BoardCanvas extends Component{
         const ctx = canvas.getContext('2d');
         const offsetY = e.pageY -  ctx.canvas.offsetTop;
         const offsetX = e.pageX - ctx.canvas.offsetLeft;
-        const {onTileHover, isPlaying} = this.props;
+        const {onTileHover, isPlaying, rows, columns} = this.props;
 
 
         const currentX = (offsetX - (offsetX % 10))/10;
         const currentY = (offsetY - (offsetY % 10))/10;
-        if (!isPlaying && (currentX !== this.lastX || currentY !== this.lastY)){
+        if (!isPlaying && (currentX !== this.lastX || currentY !== this.lastY)
+        && currentX < rows && currentY < columns){
             onTileHover(currentX, currentY)
         }
         this.lastY = currentY;

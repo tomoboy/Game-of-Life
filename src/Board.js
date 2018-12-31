@@ -39,10 +39,11 @@ class Board extends Component{
             , selectedShape
             , previewState: startBoard
         };
-        this.props.setBoardfuncs(this.onTick);
+        this.props.setBoardfuncs(this.onTick, this.newBoard);
     }
 
     newBoard = (rows, columns) => {
+        console.log('newBoard');
         let boardState = createEmptyBoardState(rows, columns);
         this.setState({
             boardState
@@ -52,8 +53,9 @@ class Board extends Component{
         });
     };
 
-    componentWillReceiveProps({selectedShape, rows, columns, previewShape}, context){// is called when hovering over a shape in sidebar
-        if (rows !== this.state.rows || columns !== this.state.columns ){ // make a new board
+    componentWillReceiveProps({selectedShape, rows, columns, previewShape, newGame}, context){// is called when hovering over a shape in sidebar
+        console.log(newGame);
+        if (rows !== this.state.rows || columns !== this.state.columns || newGame ){ // make a new board
             this.newBoard(rows, columns);
         } else { // a new preview shape is hovered over
             let {boardState} = this.state;
@@ -83,8 +85,12 @@ class Board extends Component{
     };
 
     onTileClick = () => {
-        const { previewState } = this.state;
-        this.setState({boardState: previewState})
+        const { previewState, newGame } = this.state;
+        if (!newGame){
+            this.setState({boardState: previewState})
+        }else {
+            this.setState({newGame: false})
+        }
     };
 
     onTileHover = (i, j) => {
@@ -97,7 +103,7 @@ class Board extends Component{
             for(let i =  startRow, k = 0; i < startRow + selectedShape.rows; i++, k++)
                 for (let j = startCol, h = 0; j < startCol + selectedShape.columns; j++, h++){
                     let ii = this.wrap(i, boardState);
-                    let jj = this.wrap(j, boardState);
+                    let jj = this.wrap(j, boardState[0]);
                     let alive = selectedShape.pattern[k][h];
                     previewState[ii][jj] = alive;
                 }

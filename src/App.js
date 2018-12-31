@@ -18,6 +18,8 @@ class App extends Component {
             , boardTick: null
             , selectedShape: null
             , previewShape: null
+            , newBoard: null
+
         };
     }
 
@@ -27,12 +29,7 @@ class App extends Component {
 
     setBoardfuncs = boardTick => this.setState({boardTick});
 
-    setBoardSize = (rows, columns) => {
-        this.setState({rows, columns});
-        this.state.newBoard(rows, columns)
-    };
-
-    setSelectedShape = shape => this.setState({previewShape: null, selectedShape: shape});
+    setSelectedShape = shape => this.setState({previewShape: null, selectedShape: shape, newGame: false});
 
     togglePlay = () => {
         const {playing} = this.state;
@@ -46,7 +43,7 @@ class App extends Component {
     };
 
     render() {
-        const {rows, columns, playing, previewShape, selectedShape } = this.state;
+        const {rows, columns, playing, previewShape, selectedShape, newGame } = this.state;
 
         return <div style={{display: 'flex', backgroundColor: '#f5f5f5'}}>
             <ControlBoard
@@ -59,14 +56,15 @@ class App extends Component {
                 isPlaying={playing}
                 rows={rows}
                 columns={columns}
-                setBoardSize={(rows, columns) => this.setState({rows, columns})}
-                setPreviewShape={shape => this.setState({previewShape: shape})}
+                setBoardSize={(rows, columns) => this.setState({rows, columns, newGame: true})}
+                setPreviewShape={shape => this.setState({previewShape: shape, newGame: false})}
                 setSelectedShape={this.setSelectedShape}
             />
             <Board
                 isPlaying={playing}
                 rows={rows}
                 columns={columns}
+                newGame={newGame}
                 previewShape={previewShape}
                 selectedShape={selectedShape}
                 setBoardfuncs={this.setBoardfuncs}/>
