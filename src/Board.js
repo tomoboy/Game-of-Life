@@ -112,7 +112,8 @@ class Board extends Component{
 
     onTick = () => {
         let {boardState, rows, columns } = this.state;
-        this.setState({boardState: tick(boardState, createEmptyBoardState(rows, columns))});
+        const tickedState = tick(boardState, createEmptyBoardState(rows, columns));
+        this.setState({boardState: tickedState, previewState: tickedState});
     };
 
     render(){

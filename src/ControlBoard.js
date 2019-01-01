@@ -14,6 +14,7 @@ import OutlinedInput from "@material-ui/core/OutlinedInput/OutlinedInput";
 import withStyles from "@material-ui/core/styles/withStyles";
 import classNames from 'classnames';
 import { DRAWER_WIDTH } from './constants'
+import Add from '@material-ui/icons/Add';
 
 
 
@@ -86,10 +87,6 @@ class ControlBoard extends Component{
                     [classes.appBarShift]: !isPlaying,
                 })}>
                 <Toolbar style={{marginTop: '5px'}} disableGutters={isPlaying}>
-                    <Button variant='contained'
-                            disabled={isPlaying} onClick={this.onTick}>
-                        <Typography variant='h6' >Tick</Typography>
-                    </Button>
                     <form autoComplete='off'>
                         <FormControl style={{margin:'5px'}}>
                             <InputLabel ref={ref => {this.inputLabelref = ref}}  htmlFor='speed-simple'>   Speed</InputLabel>
@@ -123,6 +120,9 @@ class ControlBoard extends Component{
                         </IconButton>
                     }
                     <Typography variant='h6'>Generation: {generation} </Typography>
+                    <IconButton onClick={this.onTick} disabled={isPlaying}>
+                        <Add/>
+                    </IconButton>
                 </Toolbar>
             </AppBar>
         )
