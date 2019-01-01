@@ -36,50 +36,47 @@ const styles = theme => ({
     }
 });
 
-
-
-
 class ControlBoard extends Component{
     constructor(props) {
         super(props);
         this.state = {
             intervalId: 0
-            , defaultTick: 500
-            , tickTime: 250
+            , defaultTick: 200
+            , tickTime: 100
             , generation: 0
         };
     }
 
     startTicking = () => {
-        let id = setInterval(this.onTick, this.state.tickTime);
+        const { tickTime } = this.state;
+        let id = setInterval(this.onTick, tickTime);
         this.props.togglePlay();
         this.setState({intervalId: id})
     };
 
     onTick = () => {
-        this.setState({generation: this.state.generation + 1});
+        const { generation } = this.state;
+        this.setState({generation: generation + 1});
         this.props.onTick();
     };
 
     speedChange = ({target}) => {
         this.setState({tickTime: target.value});
-        return new Promise(resolve => setTimeout(resolve, 300)).then(() => { //Hack to make setinterval work properly
-                if (this.props.isPlaying) {
-                    clearInterval(this.state.intervalId);
-                    this.startTicking();
-                }
-            }
-        );
     };
-
-
 
     stopTicking = () => {
         clearInterval(this.state.intervalId);
         this.props.togglePlay()
     };
 
+    componentWillReceiveProps({newGame}, context) {
+        if (newGame) {
+            this.setState({generation: 0})
+        }
+    }
+
     render(){
+        const { tickTime, defaultTick, generation } = this.state;
         const { classes, isPlaying } = this.props;
         return (
             <AppBar
@@ -98,7 +95,7 @@ class ControlBoard extends Component{
                             <InputLabel ref={ref => {this.inputLabelref = ref}}  htmlFor='speed-simple'>   Speed</InputLabel>
                             <Select
                                 disabled={isPlaying}
-                                value={this.state.tickTime}
+                                value={tickTime}
                                 onChange={this.speedChange}
                                 input={
                                     <OutlinedInput
@@ -108,11 +105,11 @@ class ControlBoard extends Component{
                                         />
                                 }
                             >
-                                <MenuItem value={this.state.defaultTick}> 1x  </MenuItem>
-                                <MenuItem value={this.state.defaultTick / 2}> 2x  </MenuItem>
-                                <MenuItem value={this.state.defaultTick / 5}> 5x  </MenuItem>
-                                <MenuItem value={this.state.defaultTick / 10}> 10x </MenuItem>
-                                <MenuItem value={this.state.defaultTick * 2}> 0.5x </MenuItem>
+                                <MenuItem value={defaultTick}> 1x  </MenuItem>
+                                <MenuItem value={defaultTick / 2}> 2x  </MenuItem>
+                                <MenuItem value={defaultTick / 5}> 5x  </MenuItem>
+                                <MenuItem value={defaultTick / 10}> 10x </MenuItem>
+                                <MenuItem value={defaultTick * 2}> 0.5x </MenuItem>
                             </Select>
                         </FormControl>
                     </form>
@@ -125,7 +122,7 @@ class ControlBoard extends Component{
                             <Pause/>
                         </IconButton>
                     }
-                    <Typography variant='h6'>Generation: {this.state.generation} </Typography>
+                    <Typography variant='h6'>Generation: {generation} </Typography>
                 </Toolbar>
             </AppBar>
         )
