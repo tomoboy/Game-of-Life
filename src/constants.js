@@ -6,4 +6,6 @@ const CELL_COLOUR =  {
     , setup: 'lightgrey'
 };
 
-export {DRAWER_WIDTH, CELL_COLOUR};
+const BACKGROUND_COLOUR = '#f2fcff';
+
+export {DRAWER_WIDTH, CELL_COLOUR, BACKGROUND_COLOUR};

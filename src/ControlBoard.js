@@ -5,21 +5,58 @@ import IconButton from "@material-ui/core/IconButton/IconButton";
 import PlayArrow from '@material-ui/icons/PlayArrow'
 import Pause from '@material-ui/icons/Pause'
 import Typography from "@material-ui/core/Typography/Typography";
-import Select from "@material-ui/core/Select/Select";
-import MenuItem from "@material-ui/core/MenuItem/MenuItem";
-import FormControl from "@material-ui/core/FormControl/FormControl";
-import InputLabel from "@material-ui/core/InputLabel/InputLabel";
-import OutlinedInput from "@material-ui/core/OutlinedInput/OutlinedInput";
 import withStyles from "@material-ui/core/styles/withStyles";
 import classNames from 'classnames';
-import { DRAWER_WIDTH } from './constants'
+import {BACKGROUND_COLOUR, DRAWER_WIDTH} from './constants'
 import ZoomIn from '@material-ui/icons/ZoomIn';
 import Add from '@material-ui/icons/Add';
 import ZoomOut from '@material-ui/icons/ZoomOut';
+import CloseIcon from '@material-ui/icons/Close';
 import FullScreen from '@material-ui/icons/Fullscreen';
 import FullScreenExit from '@material-ui/icons/FullscreenExit';
+import Select from 'react-select';
+import Button from "@material-ui/core/Button/Button";
+import AboutWindow from "./AboutWindow";
+import Dialog from "@material-ui/core/Dialog/Dialog";
+import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
+import DialogContent from "@material-ui/core/DialogContent/DialogContent";
+import Grid from "@material-ui/core/Grid/Grid";
 
+const defaultTick =  200;
+const speedOptions = [
+    {value: defaultTick * 2, label: '0.5x'}
+    , {value: defaultTick, label: '1x'}
+    , {value: defaultTick/2, label: '2x'}
+    , {value: defaultTick/5, label: '5x'}
+    , {value: defaultTick/10, label: '10x'}
+];
 
+const selectorStyles = {
+    option: (provided, {isSelected}) => ({
+        ...provided
+        , backgroundColor: BACKGROUND_COLOUR
+        , color: isSelected ? 'blue' : 'black'
+    }),
+    indicatorSeparator: styles => ({
+        ...styles
+        , backgroundColor: 'black'
+    }),
+    dropdownIndicator: styles => ({
+        ...styles
+        , color: 'black'
+    }),
+    menuList: styles => ({
+        ...styles
+        , backgroundColor: BACKGROUND_COLOUR
+    }),
+    control: styles => ({
+        ...styles
+        , borderColor: 'black'
+        , backgroundColor: BACKGROUND_COLOUR
+        , minWidth: 76
+        , margin: 5
+    })
+};
 
 const styles = theme => ({
     root: {
@@ -29,7 +66,9 @@ const styles = theme => ({
         transition: theme.transitions.create(['margin', 'width'], {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.leavingScreen
-        })},
+        })
+        , backgroundColor: BACKGROUND_COLOUR
+    },
     appBarShift: {
         width: `calc(100% - ${DRAWER_WIDTH}px)`,
         marginLeft: DRAWER_WIDTH,
@@ -45,17 +84,37 @@ class ControlBoard extends Component{
         super(props);
         this.state = {
             intervalId: 0
-            , defaultTick: 200
-            , tickTime: 100
+            , tickTime: speedOptions[1]
             , generation: 0
+            , aboutOpen: false
+            , wasFull: false
         };
     }
 
     startTicking = () => {
         const { tickTime } = this.state;
-        let id = setInterval(this.onTick, tickTime);
+        let id = setInterval(this.onTick, tickTime.value);
         this.props.togglePlay();
         this.setState({intervalId: id})
+    };
+
+    openModal = () => {
+        const {fullscreen, toggleFullscreen} = this.props;
+        let wasFull = false;
+        if (fullscreen) {
+            wasFull = true;
+            toggleFullscreen(false);
+        }
+        this.setState({wasFull, aboutOpen: true})
+    };
+
+    closeModal = ()=> {
+        const { wasFull } = this.state;
+        const { toggleFullscreen } = this.props;
+        if (wasFull) {
+            toggleFullscreen(true);
+        }
+        this.setState({wasFull: false, aboutOpen: false})
     };
 
     onTick = () => {
@@ -64,8 +123,8 @@ class ControlBoard extends Component{
         this.props.onTick();
     };
 
-    speedChange = ({target}) => {
-        this.setState({tickTime: target.value});
+    speedChange = selected => {
+        this.setState({tickTime: selected});
     };
 
     stopTicking = () => {
@@ -80,8 +139,8 @@ class ControlBoard extends Component{
     }
 
     render(){
-        const { tickTime, defaultTick, generation } = this.state;
-        const { classes, isPlaying, zoom, toggleFullscreen, fullscreen } = this.props;
+        const { tickTime, generation, aboutOpen } = this.state;
+        const { classes, isPlaying, zoom, toggleFullscreen, fullscreen} = this.props;
         return (
             <AppBar
                 color='default'
@@ -91,29 +150,19 @@ class ControlBoard extends Component{
                 })}>
                 <Toolbar style={{marginTop: '5px'}} disableGutters={isPlaying}>
                     <Typography variant='h4'>GAME OF LIFE </Typography>
-                    <form autoComplete='off'>
-                        <FormControl style={{margin:'5px'}}>
-                            <InputLabel ref={ref => {this.inputLabelref = ref}}  htmlFor='speed-simple'>   Speed</InputLabel>
-                            <Select
-                                disabled={isPlaying}
-                                value={tickTime}
-                                onChange={this.speedChange}
-                                input={
-                                    <OutlinedInput
-                                        labelWidth={0}
-                                        name='speed'
-                                        id='speed-simple'
-                                        />
-                                }
-                            >
-                                <MenuItem value={defaultTick}> 1x  </MenuItem>
-                                <MenuItem value={defaultTick / 2}> 2x  </MenuItem>
-                                <MenuItem value={defaultTick / 5}> 5x  </MenuItem>
-                                <MenuItem value={defaultTick / 10}> 10x </MenuItem>
-                                <MenuItem value={defaultTick * 2}> 0.5x </MenuItem>
-                            </Select>
-                        </FormControl>
-                    </form>
+                    <Select
+                        value={tickTime}
+                        onChange={this.speedChange}
+                        options={speedOptions}
+                        defaultValue={speedOptions[1]}
+                        isDisabled={isPlaying}
+                        isClearable={false}
+                        className='selektor'
+                        classNamePrefix="selektorpre"
+                        isSearchable={false}
+                        name='speed'
+                        placeHolder='speed'
+                        styles={selectorStyles}/>
                     {(!isPlaying) ?
                         < IconButton color='inherit' onClick={this.startTicking}>
                             <PlayArrow/>
@@ -142,6 +191,23 @@ class ControlBoard extends Component{
                             <FullScreenExit/>
                         </IconButton>
                     }
+                    <Button size='small' mini variant='outlined' onClick={this.openModal}>About</Button>
+                    <Dialog
+                        open={aboutOpen}
+                        onClose={this.closeModal}>
+                        <DialogTitle>
+                            <Grid
+                                container
+                                alignItems='stretch'
+                                justify='space-between'>
+                                <Typography variant='h6'> About the Game of Life </Typography>
+                                <IconButton aria-label="Close" onClick={this.closeModal}>
+                                    <CloseIcon />
+                                </IconButton>
+                            </Grid>
+                        </DialogTitle>
+                        <DialogContent><AboutWindow/></DialogContent>
+                    </Dialog>
                 </Toolbar>
             </AppBar>
         )

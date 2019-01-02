@@ -14,6 +14,9 @@ import acorn from "./acorn";
 import pulsar from "./pulsar";
 import homer from "./homer";
 import flower from "./flower";
+import tenCellRow from './10CellRow'
+import tumbler from "./tumbler";
+import centinal from "./centinal";
 
 const capitalize = (word) => word.charAt(0).toUpperCase() + word.slice(1);
 
@@ -30,7 +33,7 @@ const calculateProperties = ({name, pattern, category}) => {
         , yMin
         , pattern
         , name: capitalize(name)
-        , category: capitalize(category)}
+        , category:(category !== '') ? capitalize(category) + ':' : ''}
 };
 
 let shapes = [
@@ -49,6 +52,9 @@ let shapes = [
     , pulsar
     , homer
     , flower
+    , tenCellRow
+    , tumbler
+    , centinal
 ];
 
 export default _.reduce(shapes.map(calculateProperties), (accumulator, current) => {

@@ -4,10 +4,12 @@ import shapes from './shapes/shapes'
 import ListSubheader from "@material-ui/core/ListSubheader/ListSubheader";
 import ListItem from "@material-ui/core/ListItem/ListItem";
 import ListItemText from "@material-ui/core/ListItemText/ListItemText";
+import {BACKGROUND_COLOUR} from "./constants";
 
 const listStyle = {
     position: 'relative'
     , overflow: 'auto'
+    , maxHeight: '500px'
 };
 
 export default class ShapesList extends Component{
@@ -21,9 +23,8 @@ export default class ShapesList extends Component{
     };
 
     componentWillMount(){
-        console.log(shapes['Still lives'][0]);
-        this.setState({selected: shapes['Still lives'][0]});
-        this.props.setSelectedShape(shapes['Still lives'][0]);
+        this.setState({selected: shapes[''][0]});
+        this.props.setSelectedShape(shapes[''][0]);
     }
 
     render(){
@@ -34,7 +35,8 @@ export default class ShapesList extends Component{
                 {Object.keys(shapes).map(category => (
                     <li key={category}>
                         <ul>
-                            <ListSubheader>{category}</ListSubheader>
+                            <ListSubheader style={{backgroundColor: BACKGROUND_COLOUR, color: 'black'}}>{category}
+                            </ListSubheader>
                             {shapes[category].map(shape => {
                                     return (
                                         <ListItem
