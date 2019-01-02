@@ -5,3 +5,4 @@ I've used canvas to draw the board as I found this simple to use and efficient e
 
 I will probably keep adding some more shapes.
 
+Try it [here](https://game-of-life-tomo.herokuapp.com/)
