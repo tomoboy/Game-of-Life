@@ -29,21 +29,18 @@ const styles = theme => ({
 class Board extends Component{
     constructor(props) {
         super(props);
-        const { rows, columns, previewShape, selectedShape} = this.props;
+        const { rows, columns} = this.props;
         let startBoard = createEmptyBoardState(rows, columns);
         this.state = {
             boardState: startBoard
             , rows
             , columns
-            , previewShape
-            , selectedShape
             , previewState: startBoard
         };
         this.props.setBoardfuncs(this.onTick);
     }
 
     newBoard = (rows, columns) => {
-        console.log('newBoard');
         let boardState = createEmptyBoardState(rows, columns);
         this.setState({
             boardState
@@ -53,8 +50,7 @@ class Board extends Component{
         });
     };
 
-    componentWillReceiveProps({selectedShape, rows, columns, previewShape, newGame}, context){// is called when hovering over a shape in sidebar
-        const { setNewGame } = this.props;
+    componentWillReceiveProps({selectedShape, rows, columns, previewShape, newGame, setNewGame}, context){// is called when hovering over a shape in sidebar
         if (rows !== this.state.rows || columns !== this.state.columns || newGame ){ // make a new board
             this.newBoard(rows, columns);
             setNewGame();
@@ -64,13 +60,19 @@ class Board extends Component{
             if (previewShape !== null){
                 let startRow = Math.floor(boardState.length/2) - previewShape.xMin;
                 let startCol = Math.floor(boardState[0].length/2) - previewShape.yMin;
-                for(let i =  startRow, k = 0; i < startRow + previewShape.rows; i++, k++){
-                    for (let j = startCol, h = 0; j < startCol + previewShape.columns; j++, h++){
-                        previewState[i][j] = previewShape.pattern[k][h];
+                for(let i = startRow - 1, k = -1; i <= startRow + previewShape.rows; i++, k++){
+                    for (let j = startCol - 1, h = -1; j <= startCol + previewShape.columns; j++, h++){
+                        previewState[i][j] = (i < startRow
+                            || i === startRow + previewShape.rows
+                            || j < startCol
+                            || j === startCol + previewShape.columns) ?
+                            false
+                            :
+                            previewShape.pattern[k][h];
                     }
                 }
             }
-            this.setState({previewShape, selectedShape, previewState});
+            this.setState({previewState});
         }
     }
 
@@ -94,8 +96,10 @@ class Board extends Component{
     };
 
     onTileHover = (i, j) => {
-        if (!this.props.isPlaying) {
-            let {boardState, previewState, selectedShape} = this.state;
+        const { isPlaying } = this.props;
+        if (!isPlaying) {
+            let {boardState, previewState} = this.state;
+            const {selectedShape} = this.props;
             let startRow = i - selectedShape.xMin;
             let startCol = j - selectedShape.yMin;
             previewState = boardState.map(row => row.map(tile => tile));
@@ -103,8 +107,7 @@ class Board extends Component{
                 for (let j = startCol, h = 0; j < startCol + selectedShape.columns; j++, h++){
                     let ii = this.wrap(i, boardState);
                     let jj = this.wrap(j, boardState[0]);
-                    let alive = selectedShape.pattern[k][h];
-                    previewState[ii][jj] = alive;
+                    previewState[ii][jj] =  selectedShape.pattern[k][h];
                 }
             this.setState({previewState})
         }
@@ -117,7 +120,7 @@ class Board extends Component{
     };
 
     render(){
-        const {classes, isPlaying } = this.props;
+        const { classes, isPlaying, tileSize } = this.props;
         const {previewState, boardState, rows, columns} = this.state;
         return (
             <div className={classNames(classes.content, {
@@ -127,6 +130,7 @@ class Board extends Component{
                     rows={rows}
                     columns={columns}
                     onTileHover={this.onTileHover}
+                    tileSize={tileSize}
                     removePreview={() => this.setState({previewState: boardState})}
                     boardState={(isPlaying) ? boardState : previewState}
                     isPlaying={isPlaying}

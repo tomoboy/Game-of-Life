@@ -11,6 +11,9 @@ import glider from "./glider";
 import lightweightSpaceShip from "./lightweightSpaceShip";
 import fPentomino from "./fPentomino";
 import acorn from "./acorn";
+import pulsar from "./pulsar";
+import homer from "./homer";
+import flower from "./flower";
 
 const capitalize = (word) => word.charAt(0).toUpperCase() + word.slice(1);
 
@@ -43,6 +46,9 @@ let shapes = [
     , lightweightSpaceShip
     , fPentomino
     , acorn
+    , pulsar
+    , homer
+    , flower
 ];
 
 export default _.reduce(shapes.map(calculateProperties), (accumulator, current) => {

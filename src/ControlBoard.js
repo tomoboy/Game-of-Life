@@ -1,7 +1,6 @@
 import React, {Component} from 'react'
 import AppBar from "@material-ui/core/AppBar/AppBar";
 import Toolbar from "@material-ui/core/Toolbar/Toolbar";
-import Button from "@material-ui/core/Button/Button";
 import IconButton from "@material-ui/core/IconButton/IconButton";
 import PlayArrow from '@material-ui/icons/PlayArrow'
 import Pause from '@material-ui/icons/Pause'
@@ -14,7 +13,11 @@ import OutlinedInput from "@material-ui/core/OutlinedInput/OutlinedInput";
 import withStyles from "@material-ui/core/styles/withStyles";
 import classNames from 'classnames';
 import { DRAWER_WIDTH } from './constants'
+import ZoomIn from '@material-ui/icons/ZoomIn';
 import Add from '@material-ui/icons/Add';
+import ZoomOut from '@material-ui/icons/ZoomOut';
+import FullScreen from '@material-ui/icons/Fullscreen';
+import FullScreenExit from '@material-ui/icons/FullscreenExit';
 
 
 
@@ -78,7 +81,7 @@ class ControlBoard extends Component{
 
     render(){
         const { tickTime, defaultTick, generation } = this.state;
-        const { classes, isPlaying } = this.props;
+        const { classes, isPlaying, zoom, toggleFullscreen, fullscreen } = this.props;
         return (
             <AppBar
                 color='default'
@@ -87,6 +90,7 @@ class ControlBoard extends Component{
                     [classes.appBarShift]: !isPlaying,
                 })}>
                 <Toolbar style={{marginTop: '5px'}} disableGutters={isPlaying}>
+                    <Typography variant='h4'>GAME OF LIFE </Typography>
                     <form autoComplete='off'>
                         <FormControl style={{margin:'5px'}}>
                             <InputLabel ref={ref => {this.inputLabelref = ref}}  htmlFor='speed-simple'>   Speed</InputLabel>
@@ -123,6 +127,21 @@ class ControlBoard extends Component{
                     <IconButton onClick={this.onTick} disabled={isPlaying}>
                         <Add/>
                     </IconButton>
+                    <IconButton onClick={() => zoom(1)} >
+                        <ZoomIn/>
+                    </IconButton>
+                    <IconButton onClick={() => zoom(-1)} >
+                        <ZoomOut/>
+                    </IconButton>
+                    {!fullscreen ?
+                        <IconButton onClick={() => toggleFullscreen(true)} >
+                            <FullScreen/>
+                        </IconButton>
+                        :
+                        <IconButton onClick={()=>toggleFullscreen(false)} >
+                            <FullScreenExit/>
+                        </IconButton>
+                    }
                 </Toolbar>
             </AppBar>
         )

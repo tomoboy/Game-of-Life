@@ -8,7 +8,7 @@ import ShapesList from "./ShapesList";
 import Paper from "@material-ui/core/Paper/Paper";
 import BoardSizeControl from "./BoardSizeControl";
 
-const styles = theme => ({
+const styles = () => ({
     drawer: {
         width: DRAWER_WIDTH,
         flexShrink: 0,
@@ -32,13 +32,14 @@ class SideBar extends Component{
                 }}
             >
                 <Grid
+                    style={{marginLeft: '5px'}}
                     container
                     direction='column'
                     wrap={'nowrap'}
                     alignItems='flex-start'
                 >
                     <Grid item>
-                        <Typography variant='h6'>Edit controls</Typography>
+                        <Typography variant='h6'>Settings</Typography>
                     </Grid>
                     <Grid item>
                         <BoardSizeControl

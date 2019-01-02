@@ -22,7 +22,8 @@ export default class BoardCanvas extends Component{
             return CELL_COLOUR.dead;
     };
 
-    componentWillReceiveProps({boardState, isPlaying}, context){
+    componentDidUpdate(){
+        const {boardState, isPlaying, tileSize} = this.props;
         const canvas = this.canvasRef.current;
         const ctx = canvas.getContext('2d');
         ctx.clearRect(0 , 0, canvas.width, canvas.height);
@@ -32,7 +33,7 @@ export default class BoardCanvas extends Component{
                 const key = `${x},${y}`;
                 if (alive && isPlaying) this.visited.add(key);
                 ctx.fillStyle = this.getColour(alive, key);
-                ctx.fillRect(y * 10, x * 10, 9, 9);
+                ctx.fillRect(y * tileSize, x * tileSize, tileSize - 1, tileSize - 1);
             })
         });
     }
@@ -41,25 +42,24 @@ export default class BoardCanvas extends Component{
         const canvas = this.canvasRef.current;
         const ctx = canvas.getContext('2d');
         const offsetY = e.pageY -  ctx.canvas.offsetTop, offsetX = e.pageX - ctx.canvas.offsetLeft;
-        const {onTileHover, isPlaying, rows, columns} = this.props;
-
-        const currentX = (offsetX - (offsetX % 10))/10, currentY = (offsetY - (offsetY % 10))/10;
+        const {onTileHover, isPlaying, rows, columns, tileSize} = this.props;
+        const currentX = (offsetX - (offsetX % tileSize))/tileSize, currentY = (offsetY - (offsetY % tileSize))/tileSize;
         if (!isPlaying && (currentX !== this.lastX || currentY !== this.lastY)
             && currentX < columns && currentY < rows){
-            onTileHover(currentY, currentX)
+            onTileHover(currentY, currentX);
+            this.lastY = currentY;
+            this.lastX = currentX;
         }
-        this.lastY = currentY;
-        this.lastX = currentX;
     };
 
     render(){
-        let {rows, columns, isPlaying, onClick, removePreview} = this.props;
+        let {rows, columns, isPlaying, onClick, removePreview, tileSize} = this.props;
         return (
             <canvas
                 id='boardCanvas'
                 ref={this.canvasRef}
-                width={columns * 10}
-                height={rows * 10}
+                width={columns * tileSize}
+                height={rows * tileSize}
                 onMouseMove={this.handleMouse}
                 onMouseLeave={removePreview}
                 onClick={() => {
