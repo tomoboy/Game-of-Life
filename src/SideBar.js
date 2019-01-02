@@ -48,14 +48,12 @@ class SideBar extends Component{
                             newBoard={setBoardSize}/>
                     </Grid>
                      <Grid item>
-                         <Paper style={{margin: '5px', padding: '5px'}}>
                              <Typography variant='subtitle1'>Shapes </Typography>
                              <ShapesList
                                  rows={rows}
                                  columns={columns}
                                  setPreviewShape={setPreviewShape}
                                  setSelectedShape={setSelectedShape}/>
-                         </Paper>
                     </Grid>
                 </Grid>
             </Drawer>

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import Paper from "../node_modules/@material-ui/core/Paper/Paper";
 import Typography from "../node_modules/@material-ui/core/Typography/Typography";
 import Grid from "../node_modules/@material-ui/core/Grid/Grid";
@@ -45,8 +45,8 @@ export default class BoardSizeControl extends Component {
         let { rows, columns, snackbarOpen, errorType } = this.state;
 
         return (
-            <Paper style={{margin: '5px', padding: '5px'}}>
-                <Typography variant='subtitle1'>board size</Typography>
+            <Fragment style={{margin: '5px', padding: '5px'}}>
+                <Typography variant='subtitle1'>Board size</Typography>
                 <Grid container direction='row'>
                     <Grid item>
                         <NumberInput
@@ -62,7 +62,7 @@ export default class BoardSizeControl extends Component {
                     </Grid>
                 </Grid>
                 <Grid item>
-                    <Button variant='contained' onClick={this.onClick}>New Board </Button>
+                    <Button size='small' mini variant='contained' onClick={this.onClick}>New Board </Button>
                 </Grid>
                 <Snackbar
                     anchorOrigin={{
@@ -76,7 +76,7 @@ export default class BoardSizeControl extends Component {
                 >
 
                 </Snackbar>
-            </Paper>
+            </Fragment>
         )
     }
 }
