@@ -21,6 +21,7 @@ import Dialog from "@material-ui/core/Dialog/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import Grid from "@material-ui/core/Grid/Grid";
+import GithubLogo from './GitHub-Mark-32px.png'
 
 const defaultTick =  200;
 const speedOptions = [
@@ -67,6 +68,7 @@ const styles = theme => ({
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.leavingScreen
         })
+        , boxShadow: 1
         , backgroundColor: BACKGROUND_COLOUR
     },
     appBarShift: {
@@ -208,6 +210,13 @@ class ControlBoard extends Component{
                         </DialogTitle>
                         <DialogContent><AboutWindow/></DialogContent>
                     </Dialog>
+                    <Button style={{marginLeft: '5px'}}
+                            size='small'
+                            mini
+                            variant='outlined'
+                            target='_blank'
+                            href='https://github.com/tomoboy'>
+                        <img style={{width: '15px', marginRight: '5px'}} src={GithubLogo} alt='Github logo'/>Follow me</Button>
                 </Toolbar>
             </AppBar>
         )

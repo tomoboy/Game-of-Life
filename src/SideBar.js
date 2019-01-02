@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React from 'react'
 import Drawer from "@material-ui/core/Drawer/Drawer";
 import { withStyles } from '@material-ui/core/styles';
 import {BACKGROUND_COLOUR, DRAWER_WIDTH} from './constants'
@@ -13,8 +13,9 @@ const styles = () => ({
         flexShrink: 0,
     },
     drawerPaper: {
-        width: DRAWER_WIDTH,
-        backgroundColor: BACKGROUND_COLOUR
+        width: DRAWER_WIDTH
+        , backgroundColor: BACKGROUND_COLOUR
+        , border: '0px'
     },
 });
 

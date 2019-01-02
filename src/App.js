@@ -8,6 +8,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Fullscreen from "react-full-screen";
 import Snackbar from "@material-ui/core/Snackbar/Snackbar";
 
+
 class App extends Component {
     constructor(props) {
         super(props);

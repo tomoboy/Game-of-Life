@@ -1,4 +1,4 @@
-const DRAWER_WIDTH = 240;
+const DRAWER_WIDTH = 210;
 const CELL_COLOUR =  {
     living: 'black'
     , dead: "rgba(255, 255, 255, 0)"

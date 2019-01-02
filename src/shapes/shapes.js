@@ -14,9 +14,21 @@ import acorn from "./acorn";
 import pulsar from "./pulsar";
 import homer from "./homer";
 import flower from "./flower";
-import tenCellRow from './10CellRow'
+import tenCellRow from './Pentadecathlon'
 import tumbler from "./tumbler";
 import centinal from "./centinal";
+import pinwheel from "./pinwheel";
+import figureEight from "./figureEight";
+import twinBeesShuttle from "./twinBeesShuttle";
+import p60GliderShuttle from "./p60GliderShuttle";
+import spaceship2 from "./spaceship2";
+import loafer from "./loafer";
+import copperhead from "./copperhead";
+import bHeptomino from "./bHeptomino";
+import piHeptomino from "./piHeptomino";
+import bunnies9 from "./bunnies9";
+import glidersByTheDozen from "./glidersByTheDozen";
+import bloom from "./bloom";
 
 const capitalize = (word) => word.charAt(0).toUpperCase() + word.slice(1);
 
@@ -55,6 +67,18 @@ let shapes = [
     , tenCellRow
     , tumbler
     , centinal
+    , pinwheel
+    , figureEight
+    , twinBeesShuttle
+    , p60GliderShuttle
+    , spaceship2
+    , loafer
+    , copperhead
+    , bHeptomino
+    , piHeptomino
+    , bunnies9
+    , glidersByTheDozen
+    , bloom
 ];
 
 export default _.reduce(shapes.map(calculateProperties), (accumulator, current) => {

@@ -26,7 +26,7 @@ export default class BoardSizeControl extends Component {
                 message += 'rows'
             }if (columns < MinSize){
                 columns = MinSize;
-                message += (message !== '') ? 'and columns' : 'columns';
+                message += (message !== '') ? ' and columns' : 'columns';
             }
             this.setState({rows, columns});
             reportError(message + ` must be more than ${MinSize}.`)
