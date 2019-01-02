@@ -11,11 +11,14 @@ const styles = () => ({
     drawer: {
         width: DRAWER_WIDTH,
         flexShrink: 0,
+        overflow: 'hidden'
     },
     drawerPaper: {
         width: DRAWER_WIDTH
         , backgroundColor: BACKGROUND_COLOUR
         , border: '0px'
+        , overflow: 'hidden'
+
     },
 });
 

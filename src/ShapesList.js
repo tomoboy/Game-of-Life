@@ -9,7 +9,7 @@ import {BACKGROUND_COLOUR} from "./constants";
 const listStyle = {
     position: 'relative'
     , overflow: 'auto'
-    , maxHeight: '500px'
+    , maxHeight: '600px'
 };
 
 export default class ShapesList extends Component{
@@ -31,7 +31,7 @@ export default class ShapesList extends Component{
         const { setPreviewShape } = this.props;
         const { selected } = this.state;
         return (
-            <List subheader={<li />} style={listStyle} dense disablePadding={true} >
+            <List subheader={<li />} style={listStyle} disablePadding={true} >
                 {Object.keys(shapes).map(category => (
                     <li key={category}>
                         <ul>

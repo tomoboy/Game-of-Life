@@ -174,7 +174,7 @@ class ControlBoard extends Component{
                             <Pause/>
                         </IconButton>
                     }
-                    <Typography variant='h6'>Generation: {generation} </Typography>
+                    <Typography variant='body1'>Generation: {generation} </Typography>
                     <IconButton onClick={this.onTick} disabled={isPlaying}>
                         <Add/>
                     </IconButton>
