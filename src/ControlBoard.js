@@ -22,6 +22,7 @@ import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import Grid from "@material-ui/core/Grid/Grid";
 import GithubLogo from './GitHub-Mark-32px.png'
+import {isMobile} from 'react-device-detect';
 
 const defaultTick =  200;
 const speedOptions = [
@@ -95,8 +96,8 @@ class ControlBoard extends Component{
 
     startTicking = () => {
         const { tickTime } = this.state;
-        let id = setInterval(this.onTick, tickTime.value);
         this.props.togglePlay();
+        let id = setInterval(this.onTick, tickTime.value);
         this.setState({intervalId: id})
     };
 
@@ -184,14 +185,14 @@ class ControlBoard extends Component{
                     <IconButton onClick={() => zoom(-1)} >
                         <ZoomOut/>
                     </IconButton>
-                    {!fullscreen ?
+                    {!isMobile && (!fullscreen ?
                         <IconButton onClick={() => toggleFullscreen(true)} >
                             <FullScreen/>
                         </IconButton>
                         :
                         <IconButton onClick={()=>toggleFullscreen(false)} >
                             <FullScreenExit/>
-                        </IconButton>
+                        </IconButton>)
                     }
                     <Button size='small' mini variant='outlined' onClick={this.openModal}>About</Button>
                     <Dialog

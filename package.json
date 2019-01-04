@@ -8,6 +8,7 @@
     "classnames": "^2.2.6",
     "lodash": "^4.17.11",
     "react": "^16.6.3",
+    "react-device-detect": "^1.6.1",
     "react-dom": "^16.6.3",
     "react-full-screen": "^0.2.3",
     "react-number-format": "^4.0.5",

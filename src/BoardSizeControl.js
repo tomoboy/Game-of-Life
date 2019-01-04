@@ -37,7 +37,7 @@ export default class BoardSizeControl extends Component {
 
 
     render() {
-        let { rows, columns } = this.state;
+        const { rows, columns } = this.state;
 
         return (
             <Fragment>

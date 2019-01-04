@@ -9,7 +9,7 @@ import Fullscreen from "react-full-screen";
 import Snackbar from "@material-ui/core/Snackbar/Snackbar";
 
 
-class App extends Component {
+export default class App extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -33,19 +33,13 @@ class App extends Component {
 
     setBoardfuncs = boardTick => this.setState({boardTick});
 
-    setSelectedShape = shape => this.setState({previewShape: null, selectedShape: shape, newGame: false});
+    setSelectedShape = shape => this.setState({previewShape: null, selectedShape: shape});
 
     reportError = errorMessage => this.setState({snackbarOpen: true, errorMessage});
 
     togglePlay = () => {
         const {playing} = this.state;
-        if (!playing) {
-            return new Promise(resolve => setTimeout(resolve, 300)).then(() => { //Adding a slight delay
-                this.setState({playing: true})
-            });
-        } else {
-            this.setState({playing: false})
-        }
+        this.setState({playing: !playing})
     };
 
     render() {
@@ -54,9 +48,7 @@ class App extends Component {
 
         return <Fullscreen
             enabled={fullscreen}
-            onChange={fullscreen => this.setState({fullscreen})}
-        >
-
+            onChange={fullscreen => this.setState({fullscreen})}>
             <div style={{display: 'flex', backgroundColor: '#f5f5f5'}}>
                 <ControlBoard
                     isPlaying={playing}
@@ -105,4 +97,3 @@ class App extends Component {
     }
 }
 
-export default App;

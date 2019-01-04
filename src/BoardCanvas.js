@@ -22,11 +22,10 @@ export default class BoardCanvas extends Component{
             return CELL_COLOUR.dead;
     };
 
-    componentDidUpdate(){
+    componentDidUpdate(prevProps, prevState){
         const {boardState, isPlaying, tileSize} = this.props;
         const canvas = this.canvasRef.current;
         const ctx = canvas.getContext('2d');
-        ctx.clearRect(0 , 0, canvas.width, canvas.height);
         if (!isPlaying) this.visited = new Set();
         boardState.forEach((row, x) => {
             row.forEach((alive, y) => {
