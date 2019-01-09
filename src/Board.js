@@ -5,6 +5,8 @@ import {DRAWER_WIDTH} from "./constants";
 import classNames from 'classnames'
 import createEmptyBoardState from "./createEmptyBoardState";
 import BoardCanvas from "./BoardCanvas";
+import _ from 'lodash'
+import {indexesToKey} from "./helperFunctions";
 
 const styles = theme => ({
     content: {
@@ -36,6 +38,7 @@ class Board extends Component{
             , rows
             , columns
             , previewState: startBoard
+            , changes: []
         };
         this.props.setBoardfuncs(this.onTick);
     }
@@ -47,6 +50,7 @@ class Board extends Component{
             , rows
             , columns
             , previewState: boardState
+            , changes: []
         });
     };
 
@@ -88,40 +92,50 @@ class Board extends Component{
     };
 
     onTileClick = () => {
-        const { previewState } = this.state;
+        const { boardState, changes } = this.state;
         const { newGame } = this.props;
         if (!newGame){
-            this.setState({boardState: previewState})
+            changes.forEach(({rowIndex, colIndex, alive}) => boardState[rowIndex][colIndex] = alive);
+            this.setState({boardState})
         }
     };
 
     onTileHover = (i, j) => {
         const { isPlaying } = this.props;
         if (!isPlaying) {
-            let {boardState, previewState} = this.state;
+            let {boardState, changes} = this.state;
             const {selectedShape} = this.props;
             let startRow = i - selectedShape.xMin;
             let startCol = j - selectedShape.yMin;
-            previewState = boardState.map(row => row.map(tile => tile));
+            let newChanges = changes
+                .filter(({alive, rowIndex, colIndex})  => alive !== boardState[rowIndex][colIndex])
+                .map(({alive, rowIndex, colIndex}) => ({alive: boardState[rowIndex][colIndex], rowIndex, colIndex}));
+
             for(let i =  startRow, k = 0; i < startRow + selectedShape.rows; i++, k++)
                 for (let j = startCol, h = 0; j < startCol + selectedShape.columns; j++, h++){
                     let ii = this.wrap(i, boardState);
                     let jj = this.wrap(j, boardState[0]);
-                    previewState[ii][jj] =  selectedShape.pattern[k][h];
+                    let c = newChanges.find(({rowIndex, colIndex}) =>
+                        rowIndex === ii && colIndex === jj);
+                    if (typeof c !== 'undefined') {
+                        c.alive = selectedShape.pattern[k][h]
+                    } else {
+                        newChanges.push({rowIndex: ii, colIndex: jj, alive: selectedShape.pattern[k][h]});
+                    }
                 }
-            this.setState({previewState})
+            this.setState({changes: newChanges})
         }
     };
 
     onTick = () => {
         const {boardState, rows, columns } = this.state;
-        const tickedState = tick(boardState, createEmptyBoardState(rows, columns));
-        this.setState({boardState: tickedState, previewState: tickedState});
+        const {newBoard, changes} = tick(boardState, createEmptyBoardState(rows, columns));
+        this.setState({boardState: newBoard, changes});
     };
 
     render(){
         const { classes, isPlaying, tileSize } = this.props;
-        const {previewState, boardState, rows, columns} = this.state;
+        const { previewState, boardState, rows, columns, changes} = this.state;
         return (
             <div className={classNames(classes.content, {
                 [classes.contentShift]: !isPlaying
@@ -131,6 +145,7 @@ class Board extends Component{
                     columns={columns}
                     onTileHover={this.onTileHover}
                     tileSize={tileSize}
+                    changes={changes}
                     removePreview={() => this.setState({previewState: boardState})}
                     boardState={(isPlaying) ? boardState : previewState}
                     isPlaying={isPlaying}

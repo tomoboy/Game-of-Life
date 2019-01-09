@@ -1,4 +1,4 @@
-export default function tick(currentBoard, emptyBoard){
+export default function tick(currentBoard, newBoard){
     let wrapRow1 = i =>  (i > 0) ? i - 1 : currentBoard.length - 1;
     let wrapRow2 = i =>  (i === currentBoard.length - 1) ? 0 : i + 1;
     let wrapCol1 = j =>  (j > 0) ? j - 1 : currentBoard[0].length - 1 ;
@@ -17,6 +17,7 @@ export default function tick(currentBoard, emptyBoard){
     let right =      (i, j) => board(i, wrapCol2(j));
     let neighbourFunctions = [over, leftOver, rightOver, under, leftUnder, rightUnder, left, right];
 
+    let changes = [];
     currentBoard.forEach((row, rowIndex) => row.forEach((tile, colIndex) => {
         let alive = tile;
         let livingNeighbours = neighbourFunctions.reduce((total, neighbourFunc) =>
@@ -25,7 +26,8 @@ export default function tick(currentBoard, emptyBoard){
             //underpopulation or overpopulation or reproduction
             alive = !alive
         }
-        emptyBoard[rowIndex][colIndex] = alive
+        if (tile !== alive) changes.push({rowIndex, colIndex, alive});
+        newBoard[rowIndex][colIndex] = alive
     }));
-    return emptyBoard;
+    return {newBoard, changes};
 }

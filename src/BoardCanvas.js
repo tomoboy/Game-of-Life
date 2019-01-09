@@ -22,19 +22,29 @@ export default class BoardCanvas extends Component{
             return CELL_COLOUR.dead;
     };
 
+    drawSquare = (ctx, x, y, alive) => {
+        const {isPlaying, tileSize} = this.props;
+        const key = `${x},${y}`;
+        if (alive && isPlaying) this.visited.add(key);
+        ctx.fillStyle = this.getColour(alive, key);
+        ctx.fillRect(y * tileSize, x * tileSize, tileSize - 1, tileSize - 1);
+}
+
     componentDidUpdate(prevProps, prevState){
-        const {boardState, isPlaying, tileSize} = this.props;
+        const {boardState, isPlaying, changes} = this.props;
         const canvas = this.canvasRef.current;
         const ctx = canvas.getContext('2d');
         if (!isPlaying) this.visited = new Set();
-        boardState.forEach((row, x) => {
-            row.forEach((alive, y) => {
-                const key = `${x},${y}`;
-                if (alive && isPlaying) this.visited.add(key);
-                ctx.fillStyle = this.getColour(alive, key);
-                ctx.fillRect(y * tileSize, x * tileSize, tileSize - 1, tileSize - 1);
+        if (changes.length > 0){
+            console.log(changes);
+            changes.forEach(({rowIndex, colIndex, alive}) => this.drawSquare(ctx, rowIndex, colIndex, alive));
+        } else {
+            boardState.forEach((row, x) => {
+                row.forEach((alive, y) => {
+                    this.drawSquare(ctx, x, y, alive);
+                })
             })
-        });
+        }
     }
 
     handleMouse = e => {
