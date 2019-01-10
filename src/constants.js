@@ -3,7 +3,7 @@ const CELL_COLOUR =  {
     living: 'black'
     , dead: "rgba(255, 255, 255, 0)"
     , visited: 'lightgreen'
-    , setup: '#ffffe5'
+    , setup: '#ccffcc'
 };
 
 const BACKGROUND_COLOUR = '#f2fcff';
