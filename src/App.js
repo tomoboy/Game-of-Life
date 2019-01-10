@@ -13,14 +13,14 @@ export default class App extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            rows : 75
-            , columns: 75
+            rows : 230
+            , columns: 450
             , playing: false
             , boardTick: null
             , selectedShape: null
             , previewShape: null
             , newGame: false
-            , tileSize: 10
+            , tileSize: 4
             , fullScreen: false
             , snackbarOpen: false
             , errorMessage: ''

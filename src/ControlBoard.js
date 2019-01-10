@@ -87,7 +87,7 @@ class ControlBoard extends Component{
         super(props);
         this.state = {
             intervalId: 0
-            , tickTime: speedOptions[1]
+            , tickTime: speedOptions[2]
             , generation: 0
             , aboutOpen: false
             , wasFull: false

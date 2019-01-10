@@ -7,11 +7,13 @@ import Typography from "@material-ui/core/Typography/Typography";
 import ShapesList from "./ShapesList";
 import BoardSizeControl from "./BoardSizeControl";
 
-const styles = () => ({
+const styles = theme => ({
     drawer: {
-        width: DRAWER_WIDTH,
-        flexShrink: 0,
-        overflow: 'hidden'
+        [theme.breakpoints.up('sm')]: {
+            width: DRAWER_WIDTH
+            ,flexShrink: 0
+            ,overflow: 'hidden'
+        },
     },
     drawerPaper: {
         width: DRAWER_WIDTH
@@ -25,7 +27,7 @@ const styles = () => ({
 function SideBar({ classes, isPlaying, rows, columns, setBoardSize, setPreviewShape, setSelectedShape, reportError }){
     return (
         <Drawer
-            variant='persistent'
+            variant={'persistent'}
             anchor='left'
             open={!isPlaying}
             className={classes.drawer}

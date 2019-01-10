@@ -8,6 +8,8 @@ export default class BoardCanvas extends Component{
         this.lastY = 0;
         this.canvasRef = React.createRef();
         this.visited = new Set();
+        this.tileSize = props.tileSize;
+        this.isPlaying = props.isPlaying;
     }
 
     getColour = (alive, key) => {
@@ -27,18 +29,21 @@ export default class BoardCanvas extends Component{
         const key = `${x},${y}`;
         if (alive && isPlaying) this.visited.add(key);
         ctx.fillStyle = this.getColour(alive, key);
-        ctx.fillRect(y * tileSize, x * tileSize, tileSize - 1, tileSize - 1);
-}
+        ctx.fillRect(y * tileSize, x * tileSize, tileSize, tileSize);
+    };
 
     componentDidUpdate(prevProps, prevState){
-        const {boardState, isPlaying, changes} = this.props;
+        const {boardState, isPlaying, changes, tileSize} = this.props;
+        const rerender = tileSize !== this.tileSize || this.isPlaying !== isPlaying;
         const canvas = this.canvasRef.current;
         const ctx = canvas.getContext('2d');
         if (!isPlaying) this.visited = new Set();
-        if (changes.length > 0){
-            console.log(changes);
+        if (!rerender && changes.length > 0){
             changes.forEach(({rowIndex, colIndex, alive}) => this.drawSquare(ctx, rowIndex, colIndex, alive));
         } else {
+            this.tileSize = tileSize;
+            this.isPlaying = isPlaying;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
             boardState.forEach((row, x) => {
                 row.forEach((alive, y) => {
                     this.drawSquare(ctx, x, y, alive);

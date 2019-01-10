@@ -9,7 +9,7 @@ import {BACKGROUND_COLOUR} from "./constants";
 const listStyle = {
     position: 'relative'
     , overflow: 'auto'
-    , maxHeight: '600px'
+    , maxHeight: '700px'
 };
 
 export default class ShapesList extends Component{
