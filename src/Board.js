@@ -8,82 +8,84 @@ import BoardCanvas from "./BoardCanvas";
 
 const styles = theme => ({
     content: {
-        flexGrow: 1,
-        marginTop: '60px',
-        padding: theme.spacing.unit * 3,
-        transition: theme.transitions.create('margin', {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.leavingScreen,
+        flexGrow: 1
+        , marginTop: '60px'
+        , padding: theme.spacing.unit * 3
+        , backgroundColor: 'snow'
+        , transition: theme.transitions.create('margin', {
+            easing: theme.transitions.easing.sharp
+            , duration: theme.transitions.duration.leavingScreen
         }),
-        marginLeft: -DRAWER_WIDTH,
-    },
-    contentShift: {
+        marginLeft: -DRAWER_WIDTH
+    }
+    , contentShift: {
         transition: theme.transitions.create('margin', {
-            easing: theme.transitions.easing.easeOut,
-            duration: theme.transitions.duration.enteringScreen,
-        }),
-        marginLeft: 0,
+            easing: theme.transitions.easing.easeOut
+            , duration: theme.transitions.duration.enteringScreen
+        })
+        , marginLeft: 0
     }
 });
 //testing
 class Board extends Component{
     constructor(props) {
         super(props);
-        const { rows, columns} = this.props;
-        let startBoard = createEmptyBoardState(rows, columns);
         this.state = {
-            boardState: startBoard
-            , rows
-            , columns
+            boardState: createEmptyBoardState(props.rows, props.columns)
+            , rows: props.rows
+            , columns: props.columns
             , changes: []
         };
         this.props.setBoardfuncs(this.onTick);
     }
 
     newBoard = (rows, columns) => {
-        let boardState = createEmptyBoardState(rows, columns);
         this.setState({
-            boardState
+            boardState: createEmptyBoardState(rows, columns)
             , rows
             , columns
             , changes: []
         });
+        this.props.setNewGame();
     };
 
-    componentWillReceiveProps({rows, columns, previewShape, newGame, setNewGame}, context){// is called when hovering over a shape in sidebar
-        if (rows !== this.state.rows || columns !== this.state.columns || newGame ){ // make a new board
-            this.newBoard(rows, columns);
-            setNewGame();
-        } else { // a new preview shape is hovered over
-            let {boardState, changes} = this.state;
-            let newChanges = changes
-                .filter(({alive, rowIndex, colIndex})  => alive !== boardState[rowIndex][colIndex])
-                .map(({alive, rowIndex, colIndex}) => ({alive: boardState[rowIndex][colIndex], rowIndex, colIndex}));
-            if (previewShape !== null){
-                let startRow = Math.floor(boardState.length/2) - previewShape.xMin;
-                let startCol = Math.floor(boardState[0].length/2) - previewShape.yMin;
-                for(let i = startRow - 1, k = -1; i <= startRow + previewShape.rows; i++, k++){
-                    for (let j = startCol - 1, h = -1; j <= startCol + previewShape.columns; j++, h++){
-                         let c = newChanges.find(({rowIndex, colIndex}) =>
-                             rowIndex === i && colIndex === j);
-                        if (typeof c !== 'undefined') {
-                            c.alive = previewShape.pattern[k][h]
-                        } else {
-                            newChanges.push((i < startRow
-                            || i === startRow + previewShape.rows
-                            || j < startCol
-                            || j === startCol + previewShape.columns) ?
-                                {rowIndex: i, colIndex: j, alive: false}
-                                :
-                                {rowIndex: i, colIndex: j, alive: previewShape.pattern[k][h]});
-                        }
-                    }
+    changesDifferentFromBoard = () => {
+        const {boardState, changes} = this.state;
+        return changes
+            .filter(({alive, rowIndex, colIndex})  => alive !== boardState[rowIndex][colIndex])
+            .map(({alive, rowIndex, colIndex}) => ({alive: boardState[rowIndex][colIndex], rowIndex, colIndex}));
+    };
+
+    previewShape = (shape) => {
+        let { rows, columns} = this.state;
+        let newChanges = this.changesDifferentFromBoard();
+        const startI = Math.floor(rows/2) - shape.xMin , startJ = Math.floor(columns/2) - shape.yMin;
+
+        for(let i = startI - 1, k = -1; i <= startI + shape.rows; i++, k++)
+            for (let j = startJ - 1, h = -1; j <= startJ + shape.columns; j++, h++){
+                const alive =
+                    i >= startI
+                    && i < startI + shape.rows
+                    && j >= startJ
+                    && j < startJ + shape.columns
+                    && shape.pattern[k][h];
+                let c = newChanges.find(({rowIndex, colIndex}) => rowIndex === i && colIndex === j);
+                if (typeof c !== 'undefined') {
+                    c.alive = alive
+                } else {
+                    newChanges.push({rowIndex: i, colIndex: j, alive});
                 }
             }
-            this.setState({changes: newChanges});
+        this.setState({changes: newChanges});
+    };
+
+    componentWillReceiveProps({rows, columns, previewShape, newGame}, context){// is called when hovering over a shape in sidebar
+        if (rows !== this.state.rows || columns !== this.state.columns || newGame ){ // make a new board
+            this.newBoard(rows, columns);
+        } else if (previewShape !== null) { // a new preview shape is hovered over
+            this.previewShape(previewShape);
         }
     }
-
 
     wrap = (index, board) => {
         if (index < 0){
@@ -96,8 +98,7 @@ class Board extends Component{
     };
 
     onTileClick = () => {
-        const { boardState, changes } = this.state;
-        const { newGame } = this.props;
+        const { boardState, changes } = this.state, { newGame } = this.props;
         if (!newGame){
             changes.forEach(({rowIndex, colIndex, alive}) => boardState[rowIndex][colIndex] = alive);
             this.setState({boardState})
@@ -105,29 +106,21 @@ class Board extends Component{
     };
 
     onTileHover = (i, j) => {
-        const { isPlaying } = this.props;
-        if (!isPlaying) {
-            let {boardState, changes} = this.state;
-            const {selectedShape} = this.props;
-            let startRow = i - selectedShape.xMin;
-            let startCol = j - selectedShape.yMin;
-            let newChanges = changes
-                .filter(({alive, rowIndex, colIndex})  => alive !== boardState[rowIndex][colIndex])
-                .map(({alive, rowIndex, colIndex}) => ({alive: boardState[rowIndex][colIndex], rowIndex, colIndex}));
-            for(let i =  startRow, k = 0; i < startRow + selectedShape.rows; i++, k++)
-                for (let j = startCol, h = 0; j < startCol + selectedShape.columns; j++, h++){
-                    let ii = this.wrap(i, boardState);
-                    let jj = this.wrap(j, boardState[0]);
-                    let c = newChanges.find(({rowIndex, colIndex}) =>
-                        rowIndex === ii && colIndex === jj);
-                    if (typeof c !== 'undefined') {
-                        c.alive = selectedShape.pattern[k][h]
-                    } else {
-                        newChanges.push({rowIndex: ii, colIndex: jj, alive: selectedShape.pattern[k][h]});
-                    }
+        const {boardState} = this.state, {selectedShape} = this.props;
+        const startI = i - selectedShape.xMin, startJ = j - selectedShape.yMin;
+        const newChanges = this.changesDifferentFromBoard();
+
+        for (let i = startI, k = 0; i < startI + selectedShape.rows; i++, k++)
+            for (let j = startJ, h = 0; j < startJ + selectedShape.columns; j++, h++) {
+                const ii = this.wrap(i, boardState), jj = this.wrap(j, boardState[0]);
+                const c = newChanges.find(({rowIndex, colIndex}) => rowIndex === ii && colIndex === jj);
+                if (typeof c !== 'undefined') {
+                    c.alive = selectedShape.pattern[k][h]
+                } else {
+                    newChanges.push({rowIndex: ii, colIndex: jj, alive: selectedShape.pattern[k][h]});
                 }
-            this.setState({changes: newChanges})
-        }
+            }
+        this.setState({changes: newChanges})
     };
 
     onTick = () => {
@@ -137,8 +130,7 @@ class Board extends Component{
     };
 
     render(){
-        const { classes, isPlaying, tileSize } = this.props;
-        const { boardState, rows, columns, changes} = this.state;
+        const { classes, isPlaying, tileSize } = this.props, { boardState, rows, columns, changes} = this.state;
         return (
             <div className={classNames(classes.content, {
                 [classes.contentShift]: !isPlaying
@@ -151,7 +143,7 @@ class Board extends Component{
                     changes={changes}
                     removePreview={() =>
                         this.setState({changes: changes.map(({rowIndex, colIndex}) =>
-                                ({rowIndex, colIndex, alive:false}))})}
+                                ({rowIndex, colIndex, alive: boardState[rowIndex][colIndex]}))})}
                     boardState={boardState}
                     isPlaying={isPlaying}
                     onClick={this.onTileClick}

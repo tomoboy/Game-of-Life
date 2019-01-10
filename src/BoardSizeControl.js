@@ -4,7 +4,7 @@ import Grid from "../node_modules/@material-ui/core/Grid/Grid";
 import NumberInput from "./NumberInput";
 import Button from "../node_modules/@material-ui/core/Button/Button";
 
-const MinSize = 54;
+const MIN_SIZE = 54;
 
 export default class BoardSizeControl extends Component {
     constructor(props) {
@@ -19,17 +19,18 @@ export default class BoardSizeControl extends Component {
         let { rows, columns } = this.state;
         const { newBoard, reportError } = this.props;
 
-        if (rows < MinSize || columns < MinSize){
+        if (rows < MIN_SIZE || columns < MIN_SIZE){
             let message = '';
-            if (rows < MinSize){
-                rows = MinSize;
+            if (rows < MIN_SIZE){
+                rows = MIN_SIZE;
                 message += 'rows'
-            }if (columns < MinSize){
-                columns = MinSize;
-                message += (message !== '') ? ' and columns' : 'columns';
+            }
+            if (columns < MIN_SIZE){
+                columns = MIN_SIZE;
+                message += message === '' ? 'columns' : ' and columns';
             }
             this.setState({rows, columns});
-            reportError(message + ` must be more than ${MinSize}.`)
+            reportError(message + ` must be more than ${MIN_SIZE}.`)
 
         }
         newBoard(rows, columns)
@@ -38,7 +39,6 @@ export default class BoardSizeControl extends Component {
 
     render() {
         const { rows, columns } = this.state;
-
         return (
             <Fragment>
                 <Typography variant='subtitle1'>Board size</Typography>
@@ -57,7 +57,8 @@ export default class BoardSizeControl extends Component {
                     </Grid>
                 </Grid>
                 <Grid item>
-                    <Button size='small' mini variant='outlined' style={{marginLeft: '5px'}} onClick={this.onClick}>New Board </Button>
+                    <Button size='small' mini variant='outlined' style={{marginLeft: '5px'}}
+                            onClick={this.onClick}>New Board </Button>
                 </Grid>
             </Fragment>
         )

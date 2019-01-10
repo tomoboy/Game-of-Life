@@ -63,21 +63,21 @@ const selectorStyles = {
 const styles = theme => ({
     root: {
         display: 'flex'
-    },
-    appBar: {
+    }
+    , appBar: {
         transition: theme.transitions.create(['margin', 'width'], {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.leavingScreen
+            easing: theme.transitions.easing.sharp
+            , duration: theme.transitions.duration.leavingScreen
         })
         , boxShadow: 1
         , backgroundColor: BACKGROUND_COLOUR
     },
     appBarShift: {
-        width: `calc(100% - ${DRAWER_WIDTH}px)`,
-        marginLeft: DRAWER_WIDTH,
-        transition: theme.transitions.create(['margin', 'width'], {
-            easing: theme.transitions.easing.easeOut,
-            duration: theme.transitions.duration.enteringScreen
+        width: `calc(100% - ${DRAWER_WIDTH}px)`
+        , marginLeft: DRAWER_WIDTH
+        , transition: theme.transitions.create(['margin', 'width'], {
+            easing: theme.transitions.easing.easeOut
+            ,duration: theme.transitions.duration.enteringScreen
         })
     }
 });
@@ -95,10 +95,9 @@ class ControlBoard extends Component{
     }
 
     startTicking = () => {
-        const { tickTime } = this.state;
-        this.props.togglePlay();
-        let id = setInterval(this.onTick, tickTime.value);
-        this.setState({intervalId: id})
+        const { tickTime } = this.state, { togglePlay } = this.props;
+        togglePlay();
+        this.setState({intervalId: setInterval(this.onTick, tickTime.value)})
     };
 
     openModal = () => {
@@ -121,9 +120,9 @@ class ControlBoard extends Component{
     };
 
     onTick = () => {
-        const { generation } = this.state;
+        const { generation } = this.state, { onTick } = this.props;
         this.setState({generation: generation + 1});
-        this.props.onTick();
+        onTick();
     };
 
     speedChange = selected => {
@@ -131,8 +130,9 @@ class ControlBoard extends Component{
     };
 
     stopTicking = () => {
-        clearInterval(this.state.intervalId);
-        this.props.togglePlay()
+        const { intervalId } = this.state, { togglePlay } = this.props;
+        clearInterval(intervalId);
+        togglePlay()
     };
 
     componentWillReceiveProps({newGame}, context) {
@@ -157,24 +157,15 @@ class ControlBoard extends Component{
                         value={tickTime}
                         onChange={this.speedChange}
                         options={speedOptions}
-                        defaultValue={speedOptions[1]}
+                        defaultValue={speedOptions[2]}
                         isDisabled={isPlaying}
                         isClearable={false}
-                        className='selektor'
-                        classNamePrefix="selektorpre"
                         isSearchable={false}
                         name='speed'
-                        placeHolder='speed'
                         styles={selectorStyles}/>
-                    {(!isPlaying) ?
-                        < IconButton color='inherit' onClick={this.startTicking}>
-                            <PlayArrow/>
-                        </IconButton>
-                        :
-                        < IconButton color='inherit' onClick={this.stopTicking}>
-                            <Pause/>
-                        </IconButton>
-                    }
+                    < IconButton color='inherit' onClick={() => isPlaying ? this.stopTicking() : this.startTicking()}>
+                        {isPlaying ? <Pause/> :  <PlayArrow/>}
+                    </IconButton>
                     <Typography variant='body1'>Generation: {generation} </Typography>
                     <IconButton onClick={this.onTick} disabled={isPlaying}>
                         <Add/>
@@ -185,14 +176,10 @@ class ControlBoard extends Component{
                     <IconButton onClick={() => zoom(-1)} >
                         <ZoomOut/>
                     </IconButton>
-                    {!isMobile && (!fullscreen ?
-                        <IconButton onClick={() => toggleFullscreen(true)} >
-                            <FullScreen/>
+                    {!isMobile &&
+                        <IconButton onClick={() => toggleFullscreen(!fullscreen)} >
+                            { fullscreen ? <FullScreenExit/> : <FullScreen/> }
                         </IconButton>
-                        :
-                        <IconButton onClick={()=>toggleFullscreen(false)} >
-                            <FullScreenExit/>
-                        </IconButton>)
                     }
                     <Button size='small' mini variant='outlined' onClick={this.openModal}>About</Button>
                     <Dialog

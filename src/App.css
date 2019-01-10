@@ -29,7 +29,9 @@ ul {
 .App-link {
   color: #61dafb;
 }
-
+html {
+    background-color: snow;
+}
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

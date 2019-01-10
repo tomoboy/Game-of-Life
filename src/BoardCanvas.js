@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {CELL_COLOUR} from "./constants";
+import {indexesToKey} from "./helperFunctions";
 
 export default class BoardCanvas extends Component{
     constructor(props) {
@@ -26,24 +27,27 @@ export default class BoardCanvas extends Component{
 
     drawSquare = (ctx, x, y, alive) => {
         const {isPlaying, tileSize} = this.props;
-        const key = `${x},${y}`;
+        const key = indexesToKey(x, y);
         if (alive && isPlaying) this.visited.add(key);
         ctx.fillStyle = this.getColour(alive, key);
         ctx.fillRect(y * tileSize, x * tileSize, tileSize, tileSize);
     };
 
+    clearBoard = (ctx, w, h) => ctx.clearRect(0, 0, w, h);
+
     componentDidUpdate(prevProps, prevState){
         const {boardState, isPlaying, changes, tileSize} = this.props;
-        const rerender = tileSize !== this.tileSize || this.isPlaying !== isPlaying;
+        const reRender = tileSize !== this.tileSize || this.isPlaying !== isPlaying;
         const canvas = this.canvasRef.current;
         const ctx = canvas.getContext('2d');
+
         if (!isPlaying) this.visited = new Set();
-        if (!rerender && changes.length > 0){
+        if (!reRender && changes.length > 0){
             changes.forEach(({rowIndex, colIndex, alive}) => this.drawSquare(ctx, rowIndex, colIndex, alive));
         } else {
             this.tileSize = tileSize;
             this.isPlaying = isPlaying;
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            this.clearBoard(ctx, canvas.width, canvas.height);
             boardState.forEach((row, x) => {
                 row.forEach((alive, y) => {
                     this.drawSquare(ctx, x, y, alive);
@@ -57,33 +61,29 @@ export default class BoardCanvas extends Component{
         const ctx = canvas.getContext('2d');
         const offsetY = e.pageY -  ctx.canvas.offsetTop, offsetX = e.pageX - ctx.canvas.offsetLeft;
         const {onTileHover, isPlaying, rows, columns, tileSize} = this.props;
-        const currentX = (offsetX - (offsetX % tileSize))/tileSize, currentY = (offsetY - (offsetY % tileSize))/tileSize;
-        if (!isPlaying && (currentX !== this.lastX || currentY !== this.lastY)
-            && currentX < columns && currentY < rows){
-            onTileHover(currentY, currentX);
-            this.lastY = currentY;
-            this.lastX = currentX;
+        const curX = (offsetX - (offsetX % tileSize))/tileSize, curY = (offsetY - (offsetY % tileSize))/tileSize;
+
+        if (!isPlaying && (curX !== this.lastX || curY !== this.lastY)
+            && curX < columns && curY < rows){
+            onTileHover(curY, curX);
+            this.lastY = curY;
+            this.lastX = curX;
         }
     };
 
     render(){
         let {rows, columns, isPlaying, onClick, removePreview, tileSize} = this.props;
-        return (
-            <canvas
-                id='boardCanvas'
-                ref={this.canvasRef}
-                width={columns * tileSize}
-                height={rows * tileSize}
-                onMouseMove={this.handleMouse}
-                onMouseLeave={removePreview}
-                onClick={() => {
-                    if (!isPlaying){
-                        onClick();
-                    }
-                }}
-            >
-                </canvas>
-
-        )
+        return  <canvas
+            id='boardCanvas'
+            ref={this.canvasRef}
+            width={columns * tileSize}
+            height={rows * tileSize}
+            onMouseMove={this.handleMouse}
+            onMouseLeave={removePreview}
+            onClick={() => {
+                if (!isPlaying){
+                    onClick();
+                }
+            }}/>
     }
 }
