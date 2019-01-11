@@ -49,7 +49,7 @@ export default class App extends Component {
         return <Fullscreen
             enabled={fullscreen}
             onChange={fullscreen => this.setState({fullscreen})}>
-            <div style={{display: 'flex', backgroundColor: '#f5f5f5'}}>
+            <div style={{display: 'flex'}}>
                 <ControlBoard
                     isPlaying={playing}
                     newGame={newGame}

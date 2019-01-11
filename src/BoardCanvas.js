@@ -27,10 +27,11 @@ export default class BoardCanvas extends Component{
 
     drawSquare = (ctx, x, y, alive) => {
         const {isPlaying, tileSize} = this.props;
+        const actualSize = isPlaying ? tileSize : tileSize - 1;
         const key = indexesToKey(x, y);
         if (alive && isPlaying) this.visited.add(key);
         ctx.fillStyle = this.getColour(alive, key);
-        ctx.fillRect(y * tileSize, x * tileSize, tileSize, tileSize);
+        ctx.fillRect(y * tileSize, x * tileSize, actualSize, actualSize);
     };
 
     clearBoard = (ctx, w, h) => ctx.clearRect(0, 0, w, h);

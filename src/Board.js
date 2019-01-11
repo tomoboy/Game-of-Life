@@ -9,8 +9,8 @@ import BoardCanvas from "./BoardCanvas";
 const styles = theme => ({
     content: {
         flexGrow: 1
-        , marginTop: '60px'
-        , padding: theme.spacing.unit * 3
+        , marginTop: '75px'
+        , padding: theme.spacing.unit * 2
         , backgroundColor: 'snow'
         , transition: theme.transitions.create('margin', {
             easing: theme.transitions.easing.sharp
