@@ -1,34 +1,29 @@
 {
-  "name": "game-of-life",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "@material-ui/core": "^3.7.0",
-    "@material-ui/icons": "^3.0.1",
-    "classnames": "^2.2.6",
-    "lodash": "^4.17.11",
-    "react": "^16.6.3",
-    "react-device-detect": "^1.6.1",
-    "react-dom": "^16.6.3",
-    "react-full-screen": "^0.2.3",
-    "react-number-format": "^4.0.5",
-    "react-scripts": "^2.1.2",
-    "react-select": "^2.2.0",
-    "typeface-roboto": "0.0.54"
-  },
+  "name": "Game-of-Life",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js",
+    "build": "cd client && npm install && npm run build"
   },
-  "eslintConfig": {
-    "extends": "react-app"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tomoboy/Game-of-Life.git"
   },
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 11",
-    "not op_mini all"
-  ]
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tomoboy/Game-of-Life/issues"
+  },
+  "homepage": "https://game-of-life-tomo.herokuapp.com",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
+    "glob": "^7.1.3",
+    "lodash": "^4.17.11",
+    "prettier": "^1.16.1"
+  }
 }
