@@ -12,24 +12,14 @@ export default function tick(currentBoard, newBoard) {
     rightUnder = (i, j) => board(wrapRow2(i), wrapCol2(j)),
     left = (i, j) => board(i, wrapCol1(j)),
     right = (i, j) => board(i, wrapCol2(j)),
-    neighbourFunctions = [
-      over,
-      leftOver,
-      rightOver,
-      under,
-      leftUnder,
-      rightUnder,
-      left,
-      right
-    ],
+    neighbourFunctions = [over, leftOver, rightOver, under, leftUnder, rightUnder, left, right],
     changes = [];
 
   currentBoard.forEach((row, rowIndex) =>
     row.forEach((tile, colIndex) => {
       let alive = tile;
       let livingNeighbours = neighbourFunctions.reduce(
-        (total, neighbourFunc) =>
-          neighbourFunc(rowIndex, colIndex) ? total + 1 : total,
+        (total, neighbourFunc) => (neighbourFunc(rowIndex, colIndex) ? total + 1 : total),
         0
       );
       if (

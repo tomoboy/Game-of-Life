@@ -13,8 +13,8 @@ export default class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      rows: 60,
-      columns: 60,
+      rows: 200,
+      columns: 300,
       playing: false,
       boardTick: null,
       selectedShape: null,

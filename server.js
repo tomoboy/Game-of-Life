@@ -15,6 +15,7 @@ app.get("/", (req, res) =>
 );
 
 app.get("/shapes", (req, res) => res.send(shapes));
+app.get("/favicon.ico", (req, res) => res.send("/public/leaf.png"));
 app.post("/shapes", (req, res) => {
   makeShapeFile(req.body);
   res.send("ok");

@@ -1,6 +1,6 @@
-import React, { Component } from "react";
-import TextField from "@material-ui/core/TextField/TextField";
-import NumberFormat from "react-number-format";
+import React, { Component } from 'react';
+import TextField from '@material-ui/core/TextField/TextField';
+import NumberFormat from 'react-number-format';
 
 export default class NumberInput extends Component {
   render() {
@@ -11,7 +11,7 @@ export default class NumberInput extends Component {
         value={this.props.value}
         onChange={this.props.onChange}
         variant="outlined"
-        style={{ width: "90px", margin: "5px" }}
+        style={{ width: '90px', margin: '5px' }}
         InputProps={{
           inputComponent: NumberFormatCustom
         }}

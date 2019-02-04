@@ -10,7 +10,6 @@ export default ({ open, handleClose }) => (
   <Dialog open={open} onClose={handleClose}>
     <DialogTitle>Define custom shape</DialogTitle>
     <DialogContent>
-
       <DialogContentText>
         To make a custom shape, first select upper left corner where you want to start your shape,
         then select bottom right corner of the shape.
