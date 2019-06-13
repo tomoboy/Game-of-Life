@@ -5,6 +5,7 @@ const _ = require("lodash");
 const capitalize = word => word.charAt(0).toUpperCase() + word.slice(1);
 
 const calculateProperties = ({ name, pattern, category }) => {
+  console.log(name);
   const rows = pattern.length,
     columns = pattern[0].length;
   return {
@@ -21,9 +22,8 @@ const shapes = glob
   .sync("./services/patterns/*.js")
   .map(file => calculateProperties(require(path.resolve(file))));
 
-// Add alphabetical sorting
-module.exports = _.reduce(
-  shapes,
+
+const categories = shapes.reduce(
   (accumulator, current) => {
     (
       accumulator[current.category] || (accumulator[current.category] = [])
@@ -32,3 +32,7 @@ module.exports = _.reduce(
   },
   {}
 );
+
+
+// Add alphabetical sorting
+module.exports = Object.values(categories).map(cat => ({category: cat, shapes: categories[cat]}));
