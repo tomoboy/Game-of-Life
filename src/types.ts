@@ -7,6 +7,7 @@ export interface AppState {
   newGame: boolean;
   tileSize: number;
   isPlaying: boolean;
+  tickTime: number;
 }
 
 export interface Shape {

@@ -1,43 +1,18 @@
 import { action$ } from "./baseStream$";
-import { BOARD_SIZE, BoardSizePayload } from "./sidebar/actions";
 import { filterReduceAndStartWithDefault } from "./streamUtils";
-import { AppState, Shapes } from "./types";
-import { shapes } from "./sidebar/shapes";
-import { NewGamePayload, SET_NEW_GAME } from "./actions/appActions";
-import {shareReplay, tap} from "rxjs/operators";
-import { TOGGLE_PLAY, TogglePlayPayload } from "./topBar/actions";
-import { defaultTick } from "./topBar/speedOptions";
+import { Shapes } from "./types";
+import { shapes } from "./shapes";
 
-const reducers = new Map<symbol, any>([
-  [
-    BOARD_SIZE,
-    (state: AppState, { columns, rows }: BoardSizePayload) => ({
-      ...state,
-      columns,
-      rows
-    })
-  ],
-  [
-    SET_NEW_GAME,
-    (state: AppState, { newGame }: NewGamePayload) => ({
-      ...state,
-      newGame
-    })
-  ],
-  [
-    TOGGLE_PLAY,
-    (state: AppState, { isPlaying }: TogglePlayPayload) => ({
-      ...state,
-      isPlaying
-    })
-  ]
-]);
+import { shareReplay, tap } from "rxjs/operators";
+
+import { defaultTick } from "./topBar/speedOptions";
+import { reducers } from "./AppSettingsReducers";
 
 const singleCell = (shapes as Shapes)[""][0];
 export const appSettings$ = action$.pipe(
   filterReduceAndStartWithDefault(reducers, {
-    columns: 50,
-    rows: 50,
+    columns: 75,
+    rows: 75,
     selectedShape: singleCell,
     newGame: false,
     tileSize: 10,

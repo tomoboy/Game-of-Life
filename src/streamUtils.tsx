@@ -1,7 +1,6 @@
 import { Observable, pipe } from "rxjs";
 import { filter, scan, startWith } from "rxjs/operators";
-import React, { useEffect, useState, Component } from "react";
-import { AppState } from "./types";
+import React, { useEffect, useState } from "react";
 
 export const filterReduceAndStartWithDefault = (
   reducers: any,
@@ -19,25 +18,17 @@ export const filterReduceAndStartWithDefault = (
 export const connect = (
   WrappedComponent: React.FunctionComponent<any>,
   stream: Observable<any>
-) =>
-  class extends Component<any> {
-    state: any = null;
-    subscription: any = null;
+) => (props: any) => {
+  const [state, setState] = useState<any>(null);
 
-    componentDidMount() {
-      this.subscription = stream.subscribe((state: any) => {
-        console.log("newState3", state);
-        this.setState(state);
-      });
-    }
-    componentWillUnmount() {
-      this.subscription.unsubscribe();
-    }
-
-    render() {
-      const props = { ...this.state, ...this.props };
-      return this.state === null
-        ? null
-        : React.createElement(WrappedComponent, props);
-    }
-  };
+  useEffect(() => {
+    const subscription = stream.subscribe((state: any) => {
+      setState(state);
+    });
+    return () => {
+      subscription.unsubscribe();
+    };
+  });
+  const props2 = { ...state, ...props };
+  return state === null ? null : <WrappedComponent {...props2} />;
+};

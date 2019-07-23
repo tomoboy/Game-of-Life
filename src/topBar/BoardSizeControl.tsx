@@ -4,7 +4,7 @@ import Header2 from "../atomicComponents/Header2";
 import { dispatchAction } from "../baseStream$";
 import { Button, StyledInput } from "../atomicComponents/StyledInput";
 import { DEFAULT_COLUMNS, DEFAULT_ROWS } from "../constants";
-import { newBoard } from "./actions";
+import {newBoard} from "./actions";
 
 const Layout = styled.div`
   display: flex;

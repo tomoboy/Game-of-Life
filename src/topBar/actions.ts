@@ -1,4 +1,5 @@
-import { createAction } from "../actions/utils";
+import {createAction} from "../actions/utils";
+import {Shape} from "../types";
 
 export interface ToggleFullScreenPayload {
   isFullScreen: boolean;
@@ -27,3 +28,19 @@ export interface ZoomPayload {
 export const ZOOM = Symbol("zoom");
 export const zoom = createAction<ZoomPayload>(ZOOM);
 
+export interface NewBoardPayload {
+  columns: number;
+  rows: number;
+}
+
+export const NEW_BOARD = Symbol("NEW_BOARD");
+export const newBoard = createAction<NewBoardPayload>(NEW_BOARD);
+
+export interface SelectedShapePayload {
+  shape: Shape | null;
+}
+
+export const CHANGE_SELECTED_SHAPE = Symbol("SELECTED_SHAPE");
+export const changeSelectedShape = createAction<SelectedShapePayload>(
+  CHANGE_SELECTED_SHAPE
+);

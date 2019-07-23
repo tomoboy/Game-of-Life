@@ -15,7 +15,9 @@ export const GenerationCounter = ({
     clearInterval(intervalId);
     setIntervalId(0);
   } else if (isPlaying && intervalId === 0) {
-    setIntervalId(setInterval(setGeneration(generation + 1), tickTime));
+    setIntervalId(
+      setInterval(() => setGeneration(generation => generation + 1), tickTime)
+    );
   }
   return <span>Generation: {generation}</span>;
 };
