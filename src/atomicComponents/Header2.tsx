@@ -10,10 +10,7 @@ const StyledHeader = styled.h2`
   line-height: 1.75;
 `;
 
-interface IProps {
-  children: ReactChild;
-}
-const Header2 = ({ children }: IProps) => (
+const Header2 = ({ children }: { children: ReactChild }) => (
   <StyledHeader>{children}</StyledHeader>
 );
 export default Header2;
