@@ -1,22 +1,22 @@
 import React from "react";
-import AboutWindow from "./AboutWindow";
-import { BACKGROUND_COLOUR } from "../constants";
+import AboutWindow from "./AboutButtonAndWindow";
 import styled from "styled-components";
 import { GenerationCounter } from "./GenerationCounter";
 import { connect } from "../streamUtils";
 import { appSettings$ } from "../AppSettings$";
 import SpeedSelector from "./SpeedSelector";
 import ShapesSelector from "./ShapesSelector";
-import { Shape } from "../types";
+import { AppState } from "../types";
 import GitHubButton from "./buttons/GitHubButton";
 import PlayButton from "./buttons/PlayButton";
 import ZoomInButton from "./buttons/ZoomInButton";
 import ZoomOutButton from "./buttons/ZoomOutButton";
 import FullScreenButton from "./buttons/FullScreenButton";
+import NewBoardButtonAndDialog from "./NewBoardButtonAndDialog";
 
 const TopBar = styled.div`
   display: flex;
-  background-color: ${BACKGROUND_COLOUR};
+  background-color: #f2fcff;
   padding: 20px;
   max-height: 100px;
   justify-content: space-between;
@@ -29,13 +29,10 @@ const ControlBoard = ({
   isPlaying,
   tickTime,
   isFullScreen,
-  selectedShape
-}: {
-  isPlaying: boolean;
-  tickTime: number;
-  isFullScreen: boolean;
-  selectedShape: Shape;
-}) => {
+  selectedShape,
+  rows,
+  columns
+}: AppState) => {
   return (
     <TopBar>
       <h4>GAME OF LIFE </h4>
@@ -46,6 +43,11 @@ const ControlBoard = ({
       <ZoomInButton />
       <ZoomOutButton />
       <FullScreenButton isFullScreen={isFullScreen} />
+      <NewBoardButtonAndDialog
+        isFullScreen={isFullScreen}
+        rows={rows}
+        columns={columns}
+      />
       <AboutWindow isFullScreen={isFullScreen} />
       <GitHubButton />
     </TopBar>

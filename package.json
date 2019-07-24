@@ -9,7 +9,6 @@
     "@types/react-select": "^2.0.19",
     "@types/styled-components": "^4.1.16",
     "@typescript-eslint/parser": "^1.10.2",
-    "classnames": "^2.2.6",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-config-prettier": "^4.0.0",
     "eslint-plugin-import": "^2.15.0",
@@ -45,6 +44,5 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ],
-  "proxy": "http://localhost:5000"
+  ]
 }

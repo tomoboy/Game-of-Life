@@ -1,10 +1,8 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import Header2 from "../atomicComponents/Header2";
 import { dispatchAction } from "../baseStream$";
 import { Button, StyledInput } from "../atomicComponents/StyledInput";
-import { DEFAULT_COLUMNS, DEFAULT_ROWS } from "../constants";
-import {newBoard} from "./actions";
+import { newBoard } from "./actions";
 
 const Layout = styled.div`
   display: flex;
@@ -45,25 +43,33 @@ const NumberInput = ({
   );
 };
 
-export const BoardSizeControl = () => {
-  const [rows, setRows] = useState<number>(DEFAULT_ROWS);
-  const [columns, setColumns] = useState<number>(DEFAULT_COLUMNS);
+export const BoardSizeControl = ({
+  rows,
+  columns,
+  closeDialog
+}: {
+  rows: number;
+  columns: number;
+  closeDialog: () => void;
+}) => {
+  const [newRows, setNewRows] = useState<number>(rows);
+  const [newColumns, setNewColumns] = useState<number>(columns);
   const submit = () => {
-    dispatchAction(newBoard({ columns, rows }));
+    closeDialog();
+    dispatchAction(newBoard({ columns: newColumns, rows: newRows }));
   };
   return (
     <>
-      <Header2>Board size</Header2>
       <Layout>
         <NumberInput
           label="Rows: "
-          value={rows}
-          onChange={e => setRows(e.target.value)}
+          value={newRows}
+          onChange={e => setNewRows(parseInt(e.target.value, 10))}
         />
         <NumberInput
           label="Columns: "
-          value={columns}
-          onChange={e => setColumns(e.target.value)}
+          value={newColumns}
+          onChange={e => setNewColumns(parseInt(e.target.value, 10))}
         />
         <Button type="submit" value="New Board" onClick={submit} />
       </Layout>

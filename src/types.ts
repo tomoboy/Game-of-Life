@@ -8,6 +8,8 @@ export interface AppState {
   tileSize: number;
   isPlaying: boolean;
   tickTime: number;
+  isFullScreen: boolean;
+  previewShape?: Shape;
 }
 
 export interface Shape {

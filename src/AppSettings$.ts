@@ -11,11 +11,11 @@ import { reducers } from "./AppSettingsReducers";
 const singleCell = (shapes as Shapes)[""][0];
 export const appSettings$ = action$.pipe(
   filterReduceAndStartWithDefault(reducers, {
-    columns: 75,
-    rows: 75,
+    columns: 300,
+    rows: 300,
     selectedShape: singleCell,
     newGame: false,
-    tileSize: 10,
+    tileSize: 3,
     isPlaying: false,
     tickTime: defaultTick,
     isFullScreen: false

@@ -1,5 +1,5 @@
-import {createAction} from "../actions/utils";
-import {Shape} from "../types";
+import { createAction } from "../actions/utils";
+import { Shape } from "../types";
 
 export interface ToggleFullScreenPayload {
   isFullScreen: boolean;
@@ -44,3 +44,9 @@ export const CHANGE_SELECTED_SHAPE = Symbol("SELECTED_SHAPE");
 export const changeSelectedShape = createAction<SelectedShapePayload>(
   CHANGE_SELECTED_SHAPE
 );
+export interface PreviewShapePayload {
+  previewShape: Shape | null;
+}
+
+export const PREVIEW_SHAPE = Symbol("PREVIEW_SHAPE");
+export const previewShape = createAction<PreviewShapePayload>(PREVIEW_SHAPE);
