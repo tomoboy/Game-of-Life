@@ -1,4 +1,4 @@
-export const defaultTick = 200;
+export const defaultTick = 150;
 export const speedOptions = [
   { value: defaultTick * 2, label: "0.5x" },
   { value: defaultTick, label: "1x" },

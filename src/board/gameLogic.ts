@@ -45,7 +45,7 @@ export default (currentBoard: BoardState) => {
         alive = !alive;
       }
       if (tile !== alive) {
-        changes.push({ rowIndex, colIndex, alive });
+        changes.push({ y: rowIndex, x: colIndex, alive });
       }
     })
   );

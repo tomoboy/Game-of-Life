@@ -1,10 +1,11 @@
 import { Shape, Shapes } from "../types";
-import Select from "react-select";
+import Select, { components } from "react-select";
 import React from "react";
 import { shapes } from "../shapes";
 import { ValueType } from "react-select/lib/types";
 import { dispatchAction } from "../baseStream$";
-import {changeSelectedShape} from "./actions";
+import { changeSelectedShape, previewShape } from "./actions";
+import styled from "styled-components";
 
 const shapesOptions = Object.keys(shapes as Shapes).map((category: string) => ({
   label: category,
@@ -18,6 +19,27 @@ interface ShapeOption {
   value: Shape;
   label: string;
 }
+
+const CustomOption = (props: any) => (
+  <div
+    onMouseOver={() =>
+      dispatchAction(previewShape({ previewShape: props.value }))
+    }
+    onMouseLeave={() => dispatchAction(previewShape({ previewShape: null }))}
+  >
+    <components.Option {...props} />
+  </div>
+);
+
+const Label = styled.span`
+  margin-bottom: 4px;
+`;
+const BaseLayout = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 200px;
+  margin-left: 10px;
+`;
 
 export default ({
   selectedShape,
@@ -38,13 +60,16 @@ export default ({
   const onChange = (newSelectedShape: Shape) => {
     if (newSelectedShape.name !== selectedShape.name) {
       dispatchAction(changeSelectedShape({ shape: newSelectedShape }));
+      dispatchAction(previewShape({ previewShape: null }));
     }
   };
 
   return (
-    <div style={{ width: "200px" }}>
+    <BaseLayout>
+      <Label>Shape:</Label>
       <Select
         value={selectedShapeOption}
+        components={{ Option: CustomOption }}
         onChange={(selected: ValueType<ShapeOption>) =>
           selected && onChange((selected as ShapeOption).value)
         }
@@ -55,6 +80,6 @@ export default ({
         isSearchable={true}
         name="shapes"
       />
-    </div>
+    </BaseLayout>
   );
 };

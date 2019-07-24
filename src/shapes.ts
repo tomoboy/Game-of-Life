@@ -48,8 +48,8 @@ const calculateProperties = ({
     rows,
     columns,
     pattern,
-    xMin: Math.floor(rows / 2),
-    yMin: Math.floor(columns / 2),
+    xMin: Math.floor(columns / 2),
+    yMin: Math.floor(rows / 2),
     name: capitalize(name),
     category: category !== "" ? capitalize(category) + ":" : ""
   };

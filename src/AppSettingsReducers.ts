@@ -2,12 +2,12 @@ import { AppState } from "./types";
 import { NewGamePayload, SET_NEW_GAME } from "./actions/appActions";
 import {
   CHANGE_SELECTED_SHAPE,
+  NEW_BOARD,
   NEW_TICK_TIME,
+  NewBoardPayload,
   NewTickTimePayload,
   SelectedShapePayload,
-  TOGGLE_FULL_SCREEN,
   TOGGLE_PLAY,
-  ToggleFullScreenPayload,
   TogglePlayPayload,
   ZOOM,
   ZoomPayload
@@ -49,10 +49,20 @@ export const reducers = new Map<symbol, any>([
     })
   ],
   [
-    TOGGLE_FULL_SCREEN,
-    (state: AppState, { isFullScreen }: ToggleFullScreenPayload) => ({
+    NEW_BOARD,
+    (state: AppState, { rows, columns }: NewBoardPayload) => ({
       ...state,
-      isFullScreen
+      rows,
+      columns,
+      newGame: true,
+      isPlaying: false
     })
   ]
+  // [
+  //   PREVIEW_SHAPE,
+  //   (state: AppState, { previewShape }: PreviewShapePayload) => ({
+  //     ...state,
+  //     previewShape
+  //   })
+  // ]
 ]);

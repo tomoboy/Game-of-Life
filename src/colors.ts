@@ -3,6 +3,5 @@ export const colors = {
 };
 export const CELL_COLOUR = {
   living: "black",
-  dead: "#ccffcc",
-  setup: "#ccffcc"
+  dead: "rgb(255, 255, 255, 0.2)"
 };

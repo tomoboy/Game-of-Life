@@ -1,54 +1,67 @@
 import React from "react";
-import AboutWindow from "./AboutWindow";
-import { BACKGROUND_COLOUR } from "../constants";
+import AboutWindow from "./AboutButtonAndWindow";
 import styled from "styled-components";
 import { GenerationCounter } from "./GenerationCounter";
 import { connect } from "../streamUtils";
 import { appSettings$ } from "../AppSettings$";
 import SpeedSelector from "./SpeedSelector";
 import ShapesSelector from "./ShapesSelector";
-import { Shape } from "../types";
+import { AppState } from "../types";
 import GitHubButton from "./buttons/GitHubButton";
 import PlayButton from "./buttons/PlayButton";
 import ZoomInButton from "./buttons/ZoomInButton";
 import ZoomOutButton from "./buttons/ZoomOutButton";
 import FullScreenButton from "./buttons/FullScreenButton";
+import NewBoardButtonAndDialog from "./NewBoardButtonAndDialog";
 
 const TopBar = styled.div`
   display: flex;
-  background-color: ${BACKGROUND_COLOUR};
   padding: 20px;
   max-height: 100px;
   justify-content: space-between;
-  border-bottom: 1px solid lightgrey;
-  box-shadow: 0 2px 5px lightgrey;
   align-items: center;
+`;
+
+const Logo = styled.div`
+  text-align: center;
+  padding-top: 10px;
+  font-size: 50px;
+  font-family: "SF Alien Encounters", sans-serif;
+`;
+
+const Banner = styled.div`
+  background-color: rgb(255, 255, 255, 0.2);
+`;
+
+const Selectors = styled.div`
+  display: flex;
 `;
 
 const ControlBoard = ({
   isPlaying,
   tickTime,
-  isFullScreen,
-  selectedShape
-}: {
-  isPlaying: boolean;
-  tickTime: number;
-  isFullScreen: boolean;
-  selectedShape: Shape;
-}) => {
+  selectedShape,
+  rows,
+  columns
+}: AppState) => {
   return (
-    <TopBar>
-      <h4>GAME OF LIFE </h4>
-      <SpeedSelector tickTime={tickTime} isPlaying={isPlaying} />
-      <ShapesSelector selectedShape={selectedShape} isPlaying={isPlaying} />
-      <PlayButton isPlaying={isPlaying} />
+    <Banner>
+      <Logo>GAME OF LIFE </Logo>
       <GenerationCounter isPlaying={isPlaying} tickTime={tickTime} />
-      <ZoomInButton />
-      <ZoomOutButton />
-      <FullScreenButton isFullScreen={isFullScreen} />
-      <AboutWindow isFullScreen={isFullScreen} />
-      <GitHubButton />
-    </TopBar>
+      <TopBar>
+        <Selectors>
+          <SpeedSelector tickTime={tickTime} isPlaying={isPlaying} />
+          <ShapesSelector selectedShape={selectedShape} isPlaying={isPlaying} />
+        </Selectors>
+        <PlayButton isPlaying={isPlaying} />
+        <ZoomInButton />
+        <ZoomOutButton />
+        <FullScreenButton />
+        <NewBoardButtonAndDialog rows={rows} columns={columns} />
+        <AboutWindow />
+        <GitHubButton />
+      </TopBar>
+    </Banner>
   );
 };
 

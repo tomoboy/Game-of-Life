@@ -1,5 +1,12 @@
 import { useState } from "react";
 import React from "react";
+import styled from "styled-components";
+
+const SpanLayout = styled.span`
+position: fixed;
+top: 10px;
+right: 10px;
+`
 
 export const GenerationCounter = ({
   isPlaying,
@@ -19,5 +26,5 @@ export const GenerationCounter = ({
       setInterval(() => setGeneration(generation => generation + 1), tickTime)
     );
   }
-  return <span>Generation: {generation}</span>;
+  return <SpanLayout>Generation: {generation}</SpanLayout>;
 };

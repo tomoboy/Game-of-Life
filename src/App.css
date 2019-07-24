@@ -7,10 +7,6 @@
   height: 40vmin;
 }
 
-.fullscreen {
-  background-color: snow;
-}
-
 ul {
     padding: 0;
 
@@ -29,8 +25,22 @@ ul {
 .App-link {
   color: #61dafb;
 }
+
+@font-face {
+  font-family: 'AlienEncounters';
+  font-style: normal;
+  font-weight: 400;
+  src: local('SFAlienEncounter'),
+  url(./alienEncounters/SFAlienEncounters.ttf) format('ttf');
+}
+
 html {
-    background-color: snow;
+  background-size: cover;
+  background-image: url("./aesthetic.jpg");
+  background-repeat: no-repeat;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
 }
 @keyframes App-logo-spin {
   from {

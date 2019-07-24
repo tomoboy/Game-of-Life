@@ -6,6 +6,8 @@ import { connect } from "../streamUtils";
 import { appSettings$ } from "../AppSettings$";
 import styled from "styled-components";
 import getNextGeneration from "./gameLogic";
+import { dispatchAction } from "../baseStream$";
+import { setNewGame } from "../actions/appActions";
 
 const createEmptyBoardState = (rows: number, columns: number) =>
   new Array(rows).fill(false).map(() => new Array(columns).fill(false));
@@ -20,8 +22,8 @@ const wrap = (index: number, limit: number) => {
   return index;
 };
 
-const Margins = styled.div`
-  margin: 50px;
+const Padding = styled.div`
+  padding: 20px;
 `;
 
 let boardState: BoardState;
@@ -39,85 +41,71 @@ const Board = ({
   tickTime
 }: AppState) => {
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
-  const [previewState, setPreviewState] = useState<ChangedState[]>([]);
+  const [hoverState, setHoverState] = useState<ChangedState[]>([]);
 
   if (!boardState) {
     boardState = createEmptyBoardState(rows, columns);
   }
-  const getColour = (alive: boolean) => {
-    if (alive) {
-      return CELL_COLOUR.living;
-    }
-    if (!isPlaying) {
-      return CELL_COLOUR.setup;
-    }
-    return CELL_COLOUR.dead;
-  };
 
   const drawSquare = ({
-    rowIndex,
-    colIndex,
+    x,
+    y,
     alive,
     ctx
   }: {
-    rowIndex: number;
-    colIndex: number;
+    x: number;
+    y: number;
     alive: boolean;
     ctx: CanvasRenderingContext2D;
   }) => {
     const actualSize = tileSize - 1;
-    ctx.fillStyle = getColour(alive);
-    ctx.fillRect(
-      rowIndex * tileSize,
-      colIndex * tileSize,
-      actualSize,
-      actualSize
-    );
+    ctx.fillStyle = alive ? CELL_COLOUR.living : CELL_COLOUR.dead;
+    if (!alive) {
+      ctx.clearRect(x * tileSize, y * tileSize, actualSize, actualSize);
+    }
+    ctx.fillRect(x * tileSize, y * tileSize, actualSize, actualSize);
   };
 
   const changesDifferentFromBoard = (changes: ChangedState[]) =>
     changes
-      .filter(
-        ({ rowIndex, colIndex, alive }) =>
-          alive !== boardState[rowIndex][colIndex]
-      )
-      .map(({ rowIndex, colIndex }) => ({
-        rowIndex,
-        colIndex,
-        alive: boardState[rowIndex][colIndex]
+      .filter(({ y, x, alive }) => alive !== boardState[y][x])
+      .map(({ y, x }) => ({
+        y,
+        x,
+        alive: boardState[y][x]
       }));
 
-  const createPreviewState = (x: number, y: number) => {
-    const startI = x - selectedShape.xMin;
-    const startJ = y - selectedShape.yMin;
-    const newPreviewState = changesDifferentFromBoard(previewState);
+  const createHoverState = (curX: number, curY: number) => {
+    const startX = curX - selectedShape.xMin;
+    const startY = curY - selectedShape.yMin;
+    const newHoverState = changesDifferentFromBoard(hoverState);
 
-    for (let i = startI, row = 0; i < startI + selectedShape.rows; i++, row++)
+    for (let y = startY, row = 0; y < startY + selectedShape.rows; y++, row++)
       for (
-        let j = startJ, column = 0;
-        j < startJ + selectedShape.columns;
-        j++, column++
+        let x = startX, column = 0;
+        x < startX + selectedShape.columns;
+        x++, column++
       ) {
-        const ii = wrap(i, rows);
-        const jj = wrap(j, columns);
-        const existingChangeIndex = newPreviewState.findIndex(
-          ({ rowIndex, colIndex }) => ii === rowIndex && jj === colIndex
+        const wrappedX = wrap(x, columns);
+        const wrappedY = wrap(y, rows);
+        const existingChangeIndex = newHoverState.findIndex(
+          ({ x, y }) => wrappedX === x && wrappedY === y
         );
         if (
           existingChangeIndex >= 0 &&
-          typeof newPreviewState[existingChangeIndex] !== "undefined"
+          typeof newHoverState[existingChangeIndex] !== "undefined"
         ) {
-          newPreviewState[existingChangeIndex].alive =
+          newHoverState[existingChangeIndex].alive =
             selectedShape.pattern[row][column];
         } else {
-          newPreviewState.push({
-            rowIndex: ii,
-            colIndex: jj,
+          newHoverState.push({
+            y: wrappedY,
+            x: wrappedX,
             alive: selectedShape.pattern[row][column]
           });
         }
       }
-    setPreviewState(newPreviewState);
+    setHoverState(newHoverState);
   };
 
   const handleMouse = (e: MouseEvent<HTMLCanvasElement>) => {
@@ -135,67 +123,73 @@ const Board = ({
       curX < columns &&
       curY < rows
     ) {
-      createPreviewState(curX, curY);
+      createHoverState(curX, curY);
       lastX = curX;
       lastY = curY;
     }
   };
-  const removePreview = () => {
-    setPreviewState([]);
+  const removeHoverState = () => {
+    setHoverState([]);
   };
 
   const onClick = () => {
-    previewState.forEach(
-      ({ rowIndex, colIndex, alive }) =>
-        (boardState[rowIndex][colIndex] = alive)
-    );
+    hoverState.forEach(({ y, x, alive }) => (boardState[y][x] = alive));
   };
   const tick = () => {
     const canvas = canvasRef.current as HTMLCanvasElement;
     const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
-    getNextGeneration(boardState).forEach(({ rowIndex, colIndex, alive }) => {
-      boardState[rowIndex][colIndex] = alive;
-      drawSquare({ rowIndex, colIndex, alive, ctx });
+    getNextGeneration(boardState).forEach(({ y, x, alive }) => {
+      boardState[y][x] = alive;
+      drawSquare({ y, x, alive, ctx });
     });
   };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+
+  const drawFullBoard = () => {
+    const canvas = canvasRef.current as HTMLCanvasElement;
+    const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
+    boardState.forEach((row, y) => {
+      row.forEach((alive, x) => {
+        drawSquare({ y, x, alive, ctx });
+      });
+    });
+  };
+
   useEffect(() => {
     const canvas = canvasRef.current as HTMLCanvasElement;
     const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
-    if (isPlaying && !intervalId) {
+    if (newGame) {
+      boardState = createEmptyBoardState(rows, columns);
+      drawFullBoard();
+      removeHoverState();
+      dispatchAction(setNewGame({ newGame: false }));
+    } else if (isPlaying && !intervalId) {
       intervalId = setInterval(tick, tickTime);
     } else if (!isPlaying && intervalId) {
       clearInterval(intervalId);
       intervalId = 0;
-    } else if (previewState.length) {
-      previewState.forEach(({ rowIndex, colIndex, alive }) =>
-        drawSquare({ rowIndex, colIndex, alive, ctx })
-      );
+    } else if (hoverState.length) {
+      hoverState.forEach(({ y, x, alive }) => drawSquare({ y, x, alive, ctx }));
     } else {
-      boardState.forEach((row, rowIndex) => {
-        row.forEach((alive, colIndex) => {
-          drawSquare({ rowIndex, colIndex, alive, ctx });
-        });
-      });
+      drawFullBoard();
     }
   });
-
+  console.log("rendering board");
   return (
-    <Margins>
+    <Padding>
       <canvas
         id="boardCanvas"
         ref={canvasRef}
         width={columns * tileSize}
         height={rows * tileSize}
         onMouseMove={handleMouse}
-        onMouseLeave={removePreview}
+        onMouseLeave={removeHoverState}
         onClick={() => {
           if (!isPlaying) {
             onClick();
           }
         }}
       />
-    </Margins>
+    </Padding>
   );
 };
 
