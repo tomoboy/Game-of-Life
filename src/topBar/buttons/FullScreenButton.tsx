@@ -16,7 +16,7 @@ export default () => {
     }
   };
   return !isMobile ? (
-    <IconButton onClick={toggleFullscreen}>
+    <IconButton color="inherit" onClick={toggleFullscreen}>
       {isFullScreen ? <FullScreenExit /> : <FullScreen />}
     </IconButton>
   ) : null;

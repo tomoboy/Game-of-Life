@@ -1,18 +1,18 @@
 import React from "react";
-import AboutWindow from "./AboutButtonAndWindow";
+import AboutWindow from "./buttons/AboutButtonAndWindow";
 import styled from "styled-components";
 import { GenerationCounter } from "./GenerationCounter";
 import { connect } from "../streamUtils";
 import { appSettings$ } from "../AppSettings$";
-import SpeedSelector from "./SpeedSelector";
-import ShapesSelector from "./ShapesSelector";
+import SpeedSelector from "./selectors/SpeedSelector";
+import ShapesSelector from "./selectors/ShapesSelector";
 import { AppState } from "../types";
 import GitHubButton from "./buttons/GitHubButton";
 import PlayButton from "./buttons/PlayButton";
 import ZoomInButton from "./buttons/ZoomInButton";
 import ZoomOutButton from "./buttons/ZoomOutButton";
 import FullScreenButton from "./buttons/FullScreenButton";
-import NewBoardButtonAndDialog from "./NewBoardButtonAndDialog";
+import NewBoardButtonAndDialog from "./buttons/NewBoardButtonAndDialog";
 
 const TopBar = styled.div`
   display: flex;
@@ -33,7 +33,7 @@ const Banner = styled.div`
   background-color: rgb(255, 255, 255, 0.2);
 `;
 
-const Selectors = styled.div`
+const Group = styled.div`
   display: flex;
 `;
 
@@ -49,17 +49,21 @@ const ControlBoard = ({
       <Logo>GAME OF LIFE </Logo>
       <GenerationCounter isPlaying={isPlaying} tickTime={tickTime} />
       <TopBar>
-        <Selectors>
-          <SpeedSelector tickTime={tickTime} isPlaying={isPlaying} />
-          <ShapesSelector selectedShape={selectedShape} isPlaying={isPlaying} />
-        </Selectors>
-        <PlayButton isPlaying={isPlaying} />
-        <ZoomInButton />
-        <ZoomOutButton />
-        <FullScreenButton />
-        <NewBoardButtonAndDialog rows={rows} columns={columns} />
-        <AboutWindow />
-        <GitHubButton />
+        <Group>
+          <SpeedSelector tickTime={tickTime} />
+          <ShapesSelector selectedShape={selectedShape} />
+        </Group>
+        <Group>
+          <PlayButton isPlaying={isPlaying} />
+          <ZoomInButton />
+          <ZoomOutButton />
+          <FullScreenButton />
+        </Group>
+        <Group>
+          <NewBoardButtonAndDialog rows={rows} columns={columns} />
+          <AboutWindow />
+          <GitHubButton />
+        </Group>
       </TopBar>
     </Banner>
   );

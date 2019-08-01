@@ -1,11 +1,12 @@
-import { Shape, Shapes } from "../types";
+import { Shape, Shapes } from "../../types";
 import Select, { components } from "react-select";
 import React from "react";
-import { shapes } from "../shapes";
+import { shapes } from "../../shapes";
 import { ValueType } from "react-select/lib/types";
-import { dispatchAction } from "../baseStream$";
-import { changeSelectedShape, previewShape } from "./actions";
+import { dispatchAction } from "../../baseStream$";
+import { changeSelectedShape, previewShape } from "../actions";
 import styled from "styled-components";
+import selectorTheme from "./selectorTheme";
 
 const shapesOptions = Object.keys(shapes as Shapes).map((category: string) => ({
   label: category,
@@ -41,13 +42,7 @@ const BaseLayout = styled.div`
   margin-left: 10px;
 `;
 
-export default ({
-  selectedShape,
-  isPlaying
-}: {
-  selectedShape: Shape;
-  isPlaying: boolean;
-}) => {
+export default ({ selectedShape }: { selectedShape: Shape }) => {
   const selectedShapeCategory = shapesOptions.find(
     option => option.label === selectedShape.category
   );
@@ -74,11 +69,19 @@ export default ({
           selected && onChange((selected as ShapeOption).value)
         }
         options={shapesOptions}
-        // defaultValue={speedOptions[2]}
-        isDisabled={isPlaying}
+        // isDisabled={isPlaying}
         isClearable={false}
         isSearchable={true}
         name="shapes"
+        theme={selectorTheme}
+        styles={{
+          groupHeading: base => ({
+            ...base,
+            fontSize: "90%",
+            fontWeight: 400,
+            color: "#7c006e"
+          })
+        }}
       />
     </BaseLayout>
   );

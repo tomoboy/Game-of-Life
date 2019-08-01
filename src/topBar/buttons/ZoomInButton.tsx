@@ -5,7 +5,7 @@ import IconButton from "@material-ui/core/IconButton";
 import React from "react";
 
 export default () => (
-  <IconButton onClick={() => dispatchAction(zoom({ zoom: 1 }))}>
+  <IconButton color="inherit" onClick={() => dispatchAction(zoom({ zoom: 1 }))}>
     <ZoomIn />
   </IconButton>
 );
