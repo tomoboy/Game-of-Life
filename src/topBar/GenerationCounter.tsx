@@ -38,7 +38,9 @@ export const GenerationCounter = ({
     // speed change
     clearInterval(intervalId);
     currentTickTime = tickTime;
-    setInterval(() => setGeneration(generation => generation + 1), tickTime);
+    setIntervalId(
+      setInterval(() => setGeneration(generation => generation + 1), tickTime)
+    );
   }
   return (
     <>
