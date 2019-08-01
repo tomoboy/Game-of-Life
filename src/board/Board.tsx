@@ -95,11 +95,12 @@ const Board = ({
         );
         if (
           existingChangeIndex >= 0 &&
-          typeof newHoverState[existingChangeIndex] !== "undefined"
+          typeof newHoverState[existingChangeIndex] !== "undefined" &&
+          selectedShape.pattern[row][column]
         ) {
           newHoverState[existingChangeIndex].alive =
             selectedShape.pattern[row][column];
-        } else {
+        } else if (selectedShape.pattern[row][column]) {
           newHoverState.push({
             y: wrappedY,
             x: wrappedX,

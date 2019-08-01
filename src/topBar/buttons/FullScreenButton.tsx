@@ -8,8 +8,15 @@ export default () => {
   const [isFullScreen, setFullScreen] = useState<boolean>(false);
   const toggleFullscreen = () => {
     if (!isFullScreen) {
-      document.documentElement.requestFullscreen();
-      setFullScreen(true);
+      document.documentElement
+        .requestFullscreen()
+        .then(() => setFullScreen(true))
+        .catch(err => {
+          console.log(err);
+          alert(
+            "Fullscreen is not working for this browser, check console for details."
+          );
+        });
     } else {
       document.exitFullscreen();
       setFullScreen(false);
