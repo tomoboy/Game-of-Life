@@ -12,15 +12,23 @@ export default () => {
         document.documentElement
           .requestFullscreen()
           .then(() => setFullScreen(true));
-      } catch (err) {
-        console.log(err);
+      } catch (e) {
+        console.log(e);
         alert(
           "Fullscreen is not working for this browser, check console for details."
         );
       }
     } else {
-      document.exitFullscreen();
-      setFullScreen(false);
+      try {
+        document.exitFullscreen();
+      } catch (e) {
+        console.log(e);
+        alert(
+          "Fullscreen is not working for this browser, check console for details."
+        );
+      } finally {
+        setFullScreen(false);
+      }
     }
   };
   return !isMobile ? (

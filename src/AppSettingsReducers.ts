@@ -58,11 +58,4 @@ export const reducers = new Map<symbol, any>([
       isPlaying: false
     })
   ]
-  // [
-  //   PREVIEW_SHAPE,
-  //   (state: AppState, { previewShape }: PreviewShapePayload) => ({
-  //     ...state,
-  //     previewShape
-  //   })
-  // ]
 ]);
