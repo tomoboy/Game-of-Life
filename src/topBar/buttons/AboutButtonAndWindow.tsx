@@ -19,8 +19,12 @@ export default () => {
   return (
     <>
       <Button
+        style={{
+          fontFamily: "SF Alien Encounters",
+          background: "rgb(255,255,255, 0.4",
+          marginLeft: "10px"
+        }}
         size="small"
-        mini
         variant="outlined"
         onClick={() => {
           setAboutOpen(true);
@@ -32,7 +36,11 @@ export default () => {
         <DialogTitle>
           <Grid container alignItems="stretch" justify="space-between">
             <Typography variant="h6"> About the Game of Life </Typography>
-            <IconButton aria-label="Close" onClick={closeAboutWindow}>
+            <IconButton
+              style={{ position: "absolute", top: 0, right: 0 }}
+              aria-label="Close"
+              onClick={closeAboutWindow}
+            >
               <Close />
             </IconButton>
           </Grid>

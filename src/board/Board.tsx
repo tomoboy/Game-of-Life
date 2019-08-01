@@ -8,6 +8,7 @@ import styled from "styled-components";
 import getNextGeneration from "./gameLogic";
 import { dispatchAction } from "../baseStream$";
 import { setNewGame } from "../actions/appActions";
+import { defaultTick } from "../topBar/speedOptions";
 
 const createEmptyBoardState = (rows: number, columns: number) =>
   new Array(rows).fill(false).map(() => new Array(columns).fill(false));
@@ -30,6 +31,7 @@ let boardState: BoardState;
 let intervalId = 0;
 let lastX = 0;
 let lastY = 0;
+let currentTickTime = defaultTick;
 
 const Board = ({
   tileSize,
@@ -163,17 +165,23 @@ const Board = ({
       removeHoverState();
       dispatchAction(setNewGame({ newGame: false }));
     } else if (isPlaying && !intervalId) {
+      currentTickTime = tickTime;
       intervalId = setInterval(tick, tickTime);
     } else if (!isPlaying && intervalId) {
       clearInterval(intervalId);
       intervalId = 0;
+    } else if (isPlaying && intervalId && currentTickTime !== tickTime) {
+      //speed change
+      clearInterval(intervalId);
+      currentTickTime = tickTime;
+      intervalId = setInterval(tick, tickTime);
     } else if (hoverState.length) {
       hoverState.forEach(({ y, x, alive }) => drawSquare({ y, x, alive, ctx }));
     } else {
       drawFullBoard();
     }
   });
-  console.log("rendering board");
+
   return (
     <Padding>
       <canvas

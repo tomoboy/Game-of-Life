@@ -5,7 +5,10 @@ import ZoomOut from "@material-ui/icons/ZoomOut";
 import React from "react";
 
 export default () => (
-  <IconButton onClick={() => dispatchAction(zoom({ zoom: -1 }))}>
+  <IconButton
+    color="inherit"
+    onClick={() => dispatchAction(zoom({ zoom: -1 }))}
+  >
     <ZoomOut />
   </IconButton>
 );
