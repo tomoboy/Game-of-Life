@@ -6,34 +6,26 @@ import IconButton from "@material-ui/core/IconButton";
 import DialogContent from "@material-ui/core/DialogContent";
 import Dialog from "@material-ui/core/Dialog";
 import Button from "@material-ui/core/Button";
-import { dispatchAction } from "../baseStream$";
-import { toggleFullScreen } from "./actions";
 import { Close } from "@material-ui/icons";
 const aboutText = `The Game of Life, also known simply as Life, is a cellular automaton devised by the British mathematician John Horton Conway in 1970.
 The game is a zero-player game, meaning that its evolution is determined by its initial state, requiring no further input. One interacts with the Game of Life by creating an initial configuration and observing how it evolves, or, for advanced players, by creating patterns with particular properties.`;
 
-export default ({ isFullScreen }: { isFullScreen: boolean }) => {
+export default () => {
   const [aboutOpen, setAboutOpen] = useState<boolean>(false);
-  const [wasFullScreen, setWasFullScreen] = useState<boolean>(false);
-
-  const openAboutWindow = () => {
-    if (isFullScreen) {
-      dispatchAction(toggleFullScreen({ isFullScreen: false }));
-      setWasFullScreen(true);
-    }
-    setAboutOpen(true);
-  };
 
   const closeAboutWindow = () => {
-    if (wasFullScreen) {
-      dispatchAction(toggleFullScreen({ isFullScreen: true }));
-    }
     setAboutOpen(false);
-    setWasFullScreen(false);
   };
   return (
     <>
-      <Button size="small" mini variant="outlined" onClick={openAboutWindow}>
+      <Button
+        size="small"
+        mini
+        variant="outlined"
+        onClick={() => {
+          setAboutOpen(true);
+        }}
+      >
         About
       </Button>
       <Dialog open={aboutOpen} onClose={closeAboutWindow}>

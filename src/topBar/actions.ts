@@ -1,14 +1,6 @@
 import { createAction } from "../actions/utils";
 import { Shape } from "../types";
 
-export interface ToggleFullScreenPayload {
-  isFullScreen: boolean;
-}
-export const TOGGLE_FULL_SCREEN = Symbol("toggleFullScreen");
-export const toggleFullScreen = createAction<ToggleFullScreenPayload>(
-  TOGGLE_FULL_SCREEN
-);
-
 export interface NewTickTimePayload {
   tickTime: number;
 }

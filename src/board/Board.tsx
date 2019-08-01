@@ -22,8 +22,8 @@ const wrap = (index: number, limit: number) => {
   return index;
 };
 
-const Margins = styled.div`
-  margin: 25px;
+const Padding = styled.div`
+  padding: 20px;
 `;
 
 let boardState: BoardState;
@@ -46,15 +46,6 @@ const Board = ({
   if (!boardState) {
     boardState = createEmptyBoardState(rows, columns);
   }
-  const getColour = (alive: boolean) => {
-    if (alive) {
-      return CELL_COLOUR.living;
-    }
-    if (!isPlaying) {
-      return CELL_COLOUR.setup;
-    }
-    return CELL_COLOUR.dead;
-  };
 
   const drawSquare = ({
     x,
@@ -68,7 +59,10 @@ const Board = ({
     ctx: CanvasRenderingContext2D;
   }) => {
     const actualSize = tileSize - 1;
-    ctx.fillStyle = getColour(alive);
+    ctx.fillStyle = alive ? CELL_COLOUR.living : CELL_COLOUR.dead;
+    if (!alive) {
+      ctx.clearRect(x * tileSize, y * tileSize, actualSize, actualSize);
+    }
     ctx.fillRect(x * tileSize, y * tileSize, actualSize, actualSize);
   };
 
@@ -179,9 +173,9 @@ const Board = ({
       drawFullBoard();
     }
   });
-
+  console.log("rendering board");
   return (
-    <Margins>
+    <Padding>
       <canvas
         id="boardCanvas"
         ref={canvasRef}
@@ -195,7 +189,7 @@ const Board = ({
           }
         }}
       />
-    </Margins>
+    </Padding>
   );
 };
 

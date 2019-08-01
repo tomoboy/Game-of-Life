@@ -16,41 +16,52 @@ import NewBoardButtonAndDialog from "./NewBoardButtonAndDialog";
 
 const TopBar = styled.div`
   display: flex;
-  background-color: #f2fcff;
   padding: 20px;
   max-height: 100px;
   justify-content: space-between;
-  border-bottom: 1px solid lightgrey;
-  box-shadow: 0 2px 5px lightgrey;
   align-items: center;
+`;
+
+const Logo = styled.div`
+  text-align: center;
+  padding-top: 10px;
+  font-size: 50px;
+  font-family: "SF Alien Encounters", sans-serif;
+`;
+
+const Banner = styled.div`
+  background-color: rgb(255, 255, 255, 0.2);
+`;
+
+const Selectors = styled.div`
+  display: flex;
 `;
 
 const ControlBoard = ({
   isPlaying,
   tickTime,
-  isFullScreen,
   selectedShape,
   rows,
   columns
 }: AppState) => {
   return (
-    <TopBar>
-      <h4>GAME OF LIFE </h4>
-      <SpeedSelector tickTime={tickTime} isPlaying={isPlaying} />
-      <ShapesSelector selectedShape={selectedShape} isPlaying={isPlaying} />
-      <PlayButton isPlaying={isPlaying} />
+    <Banner>
+      <Logo>GAME OF LIFE </Logo>
       <GenerationCounter isPlaying={isPlaying} tickTime={tickTime} />
-      <ZoomInButton />
-      <ZoomOutButton />
-      <FullScreenButton isFullScreen={isFullScreen} />
-      <NewBoardButtonAndDialog
-        isFullScreen={isFullScreen}
-        rows={rows}
-        columns={columns}
-      />
-      <AboutWindow isFullScreen={isFullScreen} />
-      <GitHubButton />
-    </TopBar>
+      <TopBar>
+        <Selectors>
+          <SpeedSelector tickTime={tickTime} isPlaying={isPlaying} />
+          <ShapesSelector selectedShape={selectedShape} isPlaying={isPlaying} />
+        </Selectors>
+        <PlayButton isPlaying={isPlaying} />
+        <ZoomInButton />
+        <ZoomOutButton />
+        <FullScreenButton />
+        <NewBoardButtonAndDialog rows={rows} columns={columns} />
+        <AboutWindow />
+        <GitHubButton />
+      </TopBar>
+    </Banner>
   );
 };
 

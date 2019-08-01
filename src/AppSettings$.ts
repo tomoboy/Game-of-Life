@@ -11,14 +11,13 @@ import { reducers } from "./AppSettingsReducers";
 const singleCell = (shapes as Shapes)[""][0];
 export const appSettings$ = action$.pipe(
   filterReduceAndStartWithDefault(reducers, {
-    columns: 300,
-    rows: 300,
+    columns: 350,
+    rows: 150,
     selectedShape: singleCell,
     newGame: false,
-    tileSize: 3,
+    tileSize: 5,
     isPlaying: false,
-    tickTime: defaultTick,
-    isFullScreen: false
+    tickTime: defaultTick
   }),
   tap(state => console.log("state", state)),
   shareReplay(1)

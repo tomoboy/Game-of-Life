@@ -5,6 +5,7 @@ import { shapes } from "../shapes";
 import { ValueType } from "react-select/lib/types";
 import { dispatchAction } from "../baseStream$";
 import { changeSelectedShape, previewShape } from "./actions";
+import styled from "styled-components";
 
 const shapesOptions = Object.keys(shapes as Shapes).map((category: string) => ({
   label: category,
@@ -30,6 +31,16 @@ const CustomOption = (props: any) => (
   </div>
 );
 
+const Label = styled.span`
+  margin-bottom: 4px;
+`;
+const BaseLayout = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 200px;
+  margin-left: 10px;
+`;
+
 export default ({
   selectedShape,
   isPlaying
@@ -54,7 +65,8 @@ export default ({
   };
 
   return (
-    <div style={{ width: "200px" }}>
+    <BaseLayout>
+      <Label>Shape:</Label>
       <Select
         value={selectedShapeOption}
         components={{ Option: CustomOption }}
@@ -68,6 +80,6 @@ export default ({
         isSearchable={true}
         name="shapes"
       />
-    </div>
+    </BaseLayout>
   );
 };

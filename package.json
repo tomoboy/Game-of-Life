@@ -21,7 +21,6 @@
     "react": "^16.8.6",
     "react-device-detect": "^1.6.1",
     "react-dom": "^16.8.6",
-    "react-full-screen": "^0.2.3",
     "react-number-format": "^4.0.5",
     "react-scripts": "^3.0.1",
     "react-select": "^2.2.0",

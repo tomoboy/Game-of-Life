@@ -4,6 +4,16 @@ import Select from "react-select";
 import React from "react";
 import { dispatchAction } from "../baseStream$";
 import { newTickTime } from "./actions";
+import styled from "styled-components";
+
+const Label = styled.span`
+  margin-bottom: 4px;
+`;
+const BaseLayout = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 75px;
+`;
 
 export default ({
   tickTime,
@@ -22,7 +32,8 @@ export default ({
     (speedOptions[0] as SpeedOption);
 
   return (
-    <div style={{ width: "75px" }}>
+    <BaseLayout>
+      <Label>Speed:</Label>
       <Select
         value={selectedSpeedOption}
         onChange={(selected: ValueType<SpeedOption>) =>
@@ -35,6 +46,6 @@ export default ({
         isSearchable={false}
         name="speed"
       />
-    </div>
+    </BaseLayout>
   );
 };
