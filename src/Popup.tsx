@@ -19,7 +19,6 @@ const tileSize = 10;
 const cellSize = 9;
 
 const PreviewShapePopup = ({ previewShape }: { previewShape: Shape }) => {
-  console.log(previewShape);
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
   const { columns, rows, pattern } =
     previewShape !== null
