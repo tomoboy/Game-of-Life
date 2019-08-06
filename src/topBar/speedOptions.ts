@@ -5,7 +5,7 @@ export const speedOptions = [
   { value: defaultTick / 2, label: "2x" },
   { value: defaultTick / 5, label: "5x" },
   { value: defaultTick / 10, label: "10x" }
-];
+] as SpeedOption[];
 
 export interface SpeedOption {
   value: number;

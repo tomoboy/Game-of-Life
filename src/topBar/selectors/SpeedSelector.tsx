@@ -23,8 +23,7 @@ export default ({ tickTime }: { tickTime: number }) => {
     }
   };
   const selectedSpeedOption =
-    speedOptions.find(e => e.value === tickTime) ||
-    (speedOptions[0] as SpeedOption);
+    speedOptions.find(e => e.value === tickTime) || speedOptions[0];
 
   return (
     <BaseLayout>

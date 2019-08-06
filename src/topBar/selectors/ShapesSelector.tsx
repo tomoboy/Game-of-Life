@@ -1,4 +1,4 @@
-import { Shape, Shapes } from "../../types";
+import { Shape } from "../../types";
 import Select, { components } from "react-select";
 import React from "react";
 import { shapes } from "../../shapes";
@@ -8,9 +8,9 @@ import { changeSelectedShape, previewShape } from "../actions";
 import styled from "styled-components";
 import selectorTheme from "./selectorTheme";
 
-const shapesOptions = Object.keys(shapes as Shapes).map((category: string) => ({
+const shapesOptions = Object.keys(shapes).map((category: string) => ({
   label: category,
-  options: (shapes as Shapes)[category].map((shape: Shape) => ({
+  options: shapes[category].map((shape: Shape) => ({
     value: shape,
     label: shape.name
   }))

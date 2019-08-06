@@ -95,6 +95,4 @@ export const shapes = [
       accumulator[current.category] || (accumulator[current.category] = [])
     ).push(current);
     return accumulator;
-  }, {});
-
-export const singleCell = (shapes as Shapes)[""][0] as Shape;
+  }, {}) as Shapes;
