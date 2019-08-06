@@ -8,14 +8,15 @@ import { shareReplay, tap } from "rxjs/operators";
 import { defaultTick } from "./topBar/speedOptions";
 import { reducers } from "./AppSettingsReducers";
 
+export const defaultTileSize = 5;
 const singleCell = (shapes as Shapes)[""][0];
 export const appSettings$ = action$.pipe(
   filterReduceAndStartWithDefault(reducers, {
-    columns: 350,
-    rows: 150,
+    columns: 320,
+    rows: 130,
     selectedShape: singleCell,
     newGame: false,
-    tileSize: 5,
+    tileSize: defaultTileSize,
     isPlaying: false,
     tickTime: defaultTick
   }),

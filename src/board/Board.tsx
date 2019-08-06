@@ -3,7 +3,7 @@ import { CELL_COLOUR } from "../colors";
 import { BoardState, ChangedState } from "./types";
 import { AppState } from "../types";
 import { connect } from "../streamUtils";
-import { appSettings$ } from "../AppSettings$";
+import { appSettings$, defaultTileSize } from "../AppSettings$";
 import styled from "styled-components";
 import getNextGeneration from "./gameLogic";
 import { dispatchAction } from "../baseStream$";
@@ -23,8 +23,11 @@ const wrap = (index: number, limit: number) => {
   return index;
 };
 
-const Padding = styled.div`
+const Wrapper = styled.div<{ height: number; width: number }>`
+  overflow: auto;
   padding: 20px;
+  width: ${props => props.width - 40}px;
+  height: ${props => props.height - 175}px;
 `;
 
 let boardState: BoardState;
@@ -32,6 +35,7 @@ let intervalId = 0;
 let lastX = 0;
 let lastY = 0;
 let currentTickTime = defaultTick;
+let currentTilesSize = defaultTileSize;
 
 const Board = ({
   tileSize,
@@ -44,6 +48,12 @@ const Board = ({
 }: AppState) => {
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
   const [hoverState, setHoverState] = useState<ChangedState[]>([]);
+  const [currentScreenWidth, setCurrentScreenWidth] = useState<number>(
+    window.innerWidth
+  );
+  const [currentScreenHeight, setCurrentScreenHeight] = useState<number>(
+    window.innerHeight
+  );
 
   if (!boardState) {
     boardState = createEmptyBoardState(rows, columns);
@@ -112,11 +122,13 @@ const Board = ({
   };
 
   const handleMouse = (e: MouseEvent<HTMLCanvasElement>) => {
+    if (isPlaying) {
+      return;
+    }
     const canvas = canvasRef.current as HTMLCanvasElement;
-    const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
-
-    const offsetY = e.pageY - ctx.canvas.offsetTop;
-    const offsetX = e.pageX - ctx.canvas.offsetLeft;
+    const rect = canvas.getBoundingClientRect();
+    const offsetX = e.clientX - rect.left;
+    const offsetY = e.clientY - rect.top;
 
     const curX = (offsetX - (offsetX % tileSize)) / tileSize;
     const curY = (offsetY - (offsetY % tileSize)) / tileSize;
@@ -132,7 +144,7 @@ const Board = ({
     }
   };
   const removeHoverState = () => {
-    setHoverState([]);
+    if (!isPlaying) setHoverState([]);
   };
 
   const onClick = () => {
@@ -156,19 +168,30 @@ const Board = ({
       });
     });
   };
+  const screenSizeChangeHandler = () => {
+    if (window.innerWidth !== currentScreenWidth) {
+      setCurrentScreenWidth(window.innerWidth);
+    }
+    if (window.innerHeight !== currentScreenHeight) {
+      setCurrentScreenHeight(window.innerHeight);
+    }
+  };
 
   useEffect(() => {
     const canvas = canvasRef.current as HTMLCanvasElement;
     const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
+    window.addEventListener("resize", screenSizeChangeHandler);
     if (newGame) {
       boardState = createEmptyBoardState(rows, columns);
       drawFullBoard();
       removeHoverState();
       dispatchAction(setNewGame({ newGame: false }));
     } else if (isPlaying && !intervalId) {
+      // start new game
       currentTickTime = tickTime;
       intervalId = setInterval(tick, tickTime);
     } else if (!isPlaying && intervalId) {
+      //  stop current game
       clearInterval(intervalId);
       intervalId = 0;
     } else if (isPlaying && intervalId && currentTickTime !== tickTime) {
@@ -176,15 +199,25 @@ const Board = ({
       clearInterval(intervalId);
       currentTickTime = tickTime;
       intervalId = setInterval(tick, tickTime);
+    } else if (isPlaying && intervalId && currentTilesSize !== tileSize) {
+      // Zoom level changed
+      currentTilesSize = tileSize;
+      clearInterval(intervalId);
+      drawFullBoard();
+      intervalId = setInterval(tick, tickTime);
     } else if (hoverState.length) {
       hoverState.forEach(({ y, x, alive }) => drawSquare({ y, x, alive, ctx }));
     } else {
       drawFullBoard();
     }
-  });
+    return () => {
+      clearInterval(intervalId);
+      window.removeEventListener("resize", screenSizeChangeHandler);
+    }; // eslint-disable-next-line
+  }, [newGame, isPlaying, tickTime, tileSize, hoverState]);
 
   return (
-    <Padding>
+    <Wrapper width={currentScreenWidth} height={currentScreenHeight}>
       <canvas
         id="boardCanvas"
         ref={canvasRef}
@@ -198,7 +231,7 @@ const Board = ({
           }
         }}
       />
-    </Padding>
+    </Wrapper>
   );
 };
 

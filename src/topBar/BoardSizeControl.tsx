@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { dispatchAction } from "../baseStream$";
-import { Button, StyledInput } from "../atomicComponents/StyledInput";
+import { StyledInput } from "./buttons/StyledInput";
 import { newBoard } from "./actions";
+import { Button } from "@material-ui/core";
 
 const Layout = styled.div`
   display: flex;
@@ -10,7 +11,9 @@ const Layout = styled.div`
   padding: 5px;
   min-width: 180px;
   label {
-    float: left;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 10px;
   }
   input {
@@ -71,7 +74,18 @@ export const BoardSizeControl = ({
           value={newColumns}
           onChange={e => setNewColumns(parseInt(e.target.value, 10))}
         />
-        <Button type="submit" value="New Board" onClick={submit} />
+        <Button
+          style={{
+            fontFamily: "SF Alien Encounters"
+          }}
+          size="small"
+          mini
+          variant="outlined"
+          target="_blank"
+          onClick={submit}
+        >
+          New Board
+        </Button>
       </Layout>
     </>
   );

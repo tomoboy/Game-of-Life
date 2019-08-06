@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import React from "react";
 import styled from "styled-components";
 import { defaultTick } from "./speedOptions";
@@ -14,8 +14,9 @@ const GenerationLayout = styled.span`
   top: 10px;
   right: 10px;
 `;
-let currentTickTime = defaultTick;
 
+let currentTickTime = defaultTick;
+let intervalId = 0;
 export const GenerationCounter = ({
   isPlaying,
   tickTime
@@ -24,24 +25,32 @@ export const GenerationCounter = ({
   tickTime: number;
 }) => {
   const [generation, setGeneration] = useState<number>(0);
-  const [intervalId, setIntervalId] = useState<number>(0);
-  if (!isPlaying && generation > 0) {
-    currentTickTime = tickTime;
-    setGeneration(0);
-    clearInterval(intervalId);
-    setIntervalId(0);
-  } else if (isPlaying && intervalId === 0) {
-    setIntervalId(
-      setInterval(() => setGeneration(generation => generation + 1), tickTime)
-    );
-  } else if (currentTickTime !== tickTime) {
-    // speed change
-    clearInterval(intervalId);
-    currentTickTime = tickTime;
-    setIntervalId(
-      setInterval(() => setGeneration(generation => generation + 1), tickTime)
-    );
-  }
+
+  useEffect(() => {
+    if (!isPlaying && generation > 0) {
+      currentTickTime = tickTime;
+      clearInterval(intervalId);
+      intervalId = 0;
+    } else if (isPlaying && intervalId === 0) {
+      setGeneration(0);
+      intervalId = setInterval(
+        () => setGeneration(generation => generation + 1),
+        tickTime
+      );
+    } else if (currentTickTime !== tickTime) {
+      // speed change
+      clearInterval(intervalId);
+      currentTickTime = tickTime;
+      intervalId = setInterval(
+        () => setGeneration(generation => generation + 1),
+        tickTime
+      );
+    }
+    return () => {
+      clearInterval(intervalId);
+      intervalId = 0;
+    }; // eslint-disable-next-line
+  }, [isPlaying, tickTime]);
   return (
     <>
       <SpanLayout>Generation: </SpanLayout>

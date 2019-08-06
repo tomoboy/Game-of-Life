@@ -16,8 +16,7 @@ import NewBoardButtonAndDialog from "./buttons/NewBoardButtonAndDialog";
 
 const TopBar = styled.div`
   display: flex;
-  padding: 20px;
-  max-height: 100px;
+  padding: 20px 20px 0 20px;
   justify-content: space-between;
   align-items: center;
 `;
@@ -30,7 +29,8 @@ const Logo = styled.div`
 `;
 
 const Banner = styled.div`
-  background-color: rgb(255, 255, 255, 0.2);
+  background-color: rgb(255, 255, 255, 0);
+  max-height: 135px;
 `;
 
 const Group = styled.div`

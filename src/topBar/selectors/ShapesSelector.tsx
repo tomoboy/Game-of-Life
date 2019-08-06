@@ -69,7 +69,6 @@ export default ({ selectedShape }: { selectedShape: Shape }) => {
           selected && onChange((selected as ShapeOption).value)
         }
         options={shapesOptions}
-        // isDisabled={isPlaying}
         isClearable={false}
         isSearchable={true}
         name="shapes"

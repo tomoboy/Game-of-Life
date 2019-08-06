@@ -6,7 +6,7 @@ export default () => (
   <Button
     style={{
       fontFamily: "SF Alien Encounters",
-      background: "rgb(255,255,255, 0.4",
+      background: "rgb(255,255,255, 0.4)",
       marginLeft: "10px"
     }}
     size="small"
