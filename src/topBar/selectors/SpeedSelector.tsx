@@ -2,7 +2,7 @@ import { ValueType } from "react-select/lib/types";
 import { SpeedOption, speedOptions } from "../speedOptions";
 import Select from "react-select";
 import React from "react";
-import { dispatchAction } from "../../baseStream$";
+import { dispatchAction } from "../../streams/baseStream$";
 import { newTickTime } from "../actions";
 import styled from "styled-components";
 import selectorTheme from "./selectorTheme";

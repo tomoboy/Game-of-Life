@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { dispatchAction } from "../baseStream$";
+import { dispatchAction } from "../streams/baseStream$";
 import { StyledInput } from "./buttons/StyledInput";
 import { newBoard } from "./actions";
 import { Button } from "@material-ui/core";

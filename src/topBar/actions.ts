@@ -42,3 +42,10 @@ export interface PreviewShapePayload {
 
 export const PREVIEW_SHAPE = Symbol("PREVIEW_SHAPE");
 export const previewShape = createAction<PreviewShapePayload>(PREVIEW_SHAPE);
+
+export interface ToggleSoundPayload {
+  isSoundOn: boolean;
+}
+
+export const TOGGLE_SOUND = Symbol("TOGGLE_SOUND");
+export const toggleSound = createAction<ToggleSoundPayload>(TOGGLE_SOUND);

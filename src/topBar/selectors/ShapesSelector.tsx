@@ -1,9 +1,9 @@
 import { Shape } from "../../types";
 import Select, { components } from "react-select";
 import React from "react";
-import { shapes } from "../../shapes";
+import { shapes } from "../../patterns/shapes";
 import { ValueType } from "react-select/lib/types";
-import { dispatchAction } from "../../baseStream$";
+import { dispatchAction } from "../../streams/baseStream$";
 import { changeSelectedShape, previewShape } from "../actions";
 import styled from "styled-components";
 import selectorTheme from "./selectorTheme";

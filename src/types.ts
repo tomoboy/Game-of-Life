@@ -1,14 +1,13 @@
 export interface AppState {
   rows: number;
   columns: number;
-  snackBarOpen: boolean;
-  errorMessage: string;
   selectedShape: Shape;
   newGame: boolean;
   tileSize: number;
   isPlaying: boolean;
   tickTime: number;
   previewShape?: Shape;
+  isSoundOn: boolean;
 }
 
 export interface Shape {

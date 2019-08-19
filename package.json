@@ -13,12 +13,14 @@
     "rxjs": "^6.3.3",
     "serve": "^11.1.0",
     "styled-components": "^4.1.3",
+    "tone": "^13.4.9",
     "typeface-roboto": "0.0.54"
   },
   "devDependencies": {
     "@types/react-dom": "^16.8.4",
     "@types/react-select": "^2.0.19",
     "@types/styled-components": "^4.1.16",
+    "@types/tone": "git://github.com/Tonejs/TypeScript.git",
     "@typescript-eslint/parser": "^1.10.2",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-config-prettier": "^4.0.0",

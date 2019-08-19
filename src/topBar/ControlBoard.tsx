@@ -1,9 +1,8 @@
 import React from "react";
 import AboutWindow from "./buttons/AboutButtonAndWindow";
 import styled from "styled-components";
-import { GenerationCounter } from "./GenerationCounter";
-import { connect } from "../streamUtils";
-import { appSettings$ } from "../AppSettings$";
+import { connect } from "../streams/streamUtils";
+import { appSettings$ } from "../streams/AppSettings$";
 import SpeedSelector from "./selectors/SpeedSelector";
 import ShapesSelector from "./selectors/ShapesSelector";
 import { AppState } from "../types";
@@ -13,6 +12,7 @@ import ZoomInButton from "./buttons/ZoomInButton";
 import ZoomOutButton from "./buttons/ZoomOutButton";
 import FullScreenButton from "./buttons/FullScreenButton";
 import NewBoardButtonAndDialog from "./buttons/NewBoardButtonAndDialog";
+import MuteButton from "./buttons/MuteButton";
 
 const TopBar = styled.div`
   display: flex;
@@ -42,12 +42,12 @@ const ControlBoard = ({
   tickTime,
   selectedShape,
   rows,
-  columns
+  columns,
+  isSoundOn
 }: AppState) => {
   return (
     <Banner>
       <Logo>GAME OF LIFE </Logo>
-      <GenerationCounter isPlaying={isPlaying} tickTime={tickTime} />
       <TopBar>
         <Group>
           <SpeedSelector tickTime={tickTime} />
@@ -57,6 +57,7 @@ const ControlBoard = ({
           <PlayButton isPlaying={isPlaying} />
           <ZoomInButton />
           <ZoomOutButton />
+          <MuteButton isSoundOn={isSoundOn} />
           <FullScreenButton />
         </Group>
         <Group>

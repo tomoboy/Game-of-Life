@@ -4,16 +4,16 @@ import "./App.css";
 
 import ControlBoard from "./topBar/ControlBoard";
 import BoardCanvas from "./board/Board";
-import { connect } from "./streamUtils";
-import { appSettings$ } from "./AppSettings$";
-import Popup from "./Popup";
+import { connect } from "./streams/streamUtils";
+import { appSettings$ } from "./streams/AppSettings$";
+import ShapePreviewPopup from "./streams/ShapePreviewPopup";
 
 const App = () => {
   return (
     <>
       <ControlBoard />
       <BoardCanvas />
-      <Popup />
+      <ShapePreviewPopup />
     </>
   );
 };

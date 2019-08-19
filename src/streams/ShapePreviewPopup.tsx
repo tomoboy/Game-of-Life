@@ -1,12 +1,12 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
-import { Shape } from "./types";
-import { CELL_COLOUR } from "./colors";
+import { Shape } from "../types";
+import { CELL_COLOUR } from "../colors";
 import { connect } from "./streamUtils";
 import { previewShape$ } from "./PreviewShape$";
 const backgroundColor = "whiteSmoke";
 
-const Popup = styled.div`
+const ShapePreviewPopup = styled.div`
   position: fixed;
   top: 50%;
   left: 50%;
@@ -37,14 +37,14 @@ const PreviewShapePopup = ({ previewShape }: { previewShape: Shape }) => {
   });
 
   return previewShape !== null ? (
-    <Popup>
+    <ShapePreviewPopup>
       <canvas
         id="previewShapeCanvas"
         ref={canvasRef}
         width={columns * 10}
         height={rows * 10}
       />
-    </Popup>
+    </ShapePreviewPopup>
   ) : null;
 };
 export default connect(

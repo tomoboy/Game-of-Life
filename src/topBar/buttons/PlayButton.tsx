@@ -1,5 +1,5 @@
 import React from "react";
-import { dispatchAction } from "../../baseStream$";
+import { dispatchAction } from "../../streams/baseStream$";
 import { togglePlay } from "../actions";
 import IconButton from "@material-ui/core/IconButton";
 import { Pause, PlayArrow } from "@material-ui/icons";

@@ -1,5 +1,5 @@
-import { AppState } from "./types";
-import { NewGamePayload, SET_NEW_GAME } from "./actions/appActions";
+import { AppState } from "../types";
+import { NewGamePayload, SET_NEW_GAME } from "../actions/appActions";
 import {
   CHANGE_SELECTED_SHAPE,
   NEW_BOARD,
@@ -8,10 +8,12 @@ import {
   NewTickTimePayload,
   SelectedShapePayload,
   TOGGLE_PLAY,
+  TOGGLE_SOUND,
   TogglePlayPayload,
+  ToggleSoundPayload,
   ZOOM,
   ZoomPayload
-} from "./topBar/actions";
+} from "../topBar/actions";
 export const reducers = new Map<symbol, any>([
   [
     SET_NEW_GAME,
@@ -56,6 +58,13 @@ export const reducers = new Map<symbol, any>([
       columns,
       newGame: true,
       isPlaying: false
+    })
+  ],
+  [
+    TOGGLE_SOUND,
+    (state: AppState, { isSoundOn }: ToggleSoundPayload) => ({
+      ...state,
+      isSoundOn
     })
   ]
 ]);
