@@ -7,7 +7,8 @@ import { shareReplay, tap } from "rxjs/operators";
 import { defaultTick } from "../topBar/speedOptions";
 import { reducers } from "./AppSettingsReducers";
 
-export const defaultTileSize = 7;
+export const defaultTileSize = 9;
+
 const acorn = shapes["Methuselah:"][0];
 export const appSettings$ = action$.pipe(
   filterReduceAndStartWithDefault(reducers, {

@@ -106,7 +106,7 @@ module.exports = {
     "react/prop-types": ["off"],
     "react/display-name": ["off"],
     "react-hooks/rules-of-hooks": ["error"],
-    "react-hooks/exhaustive-deps": ["warn"],
+    "react-hooks/exhaustive-deps": ["off"],
     "prettier/prettier": ["error"],
     "sort-class-members/sort-class-members": [
       "error",
@@ -198,4 +198,4 @@ module.exports = {
     "version": false,
     "window": false,
   },
-}
+};

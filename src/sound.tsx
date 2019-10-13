@@ -8,6 +8,5 @@ const getNote = (y: number): string =>
 
 export const playSound = (x: number, y: number) => {
   const note = getNote(y);
-  console.log("note", note);
   synth.triggerAttackRelease(note, "16n");
 };

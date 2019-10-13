@@ -1,23 +1,14 @@
-import React, { MouseEvent, useEffect, useState } from "react";
-import { BoardState, ChangedState } from "./types";
+import React, { MouseEvent, useEffect, useState, useRef } from "react";
+import { ChangedState, BoardState } from "./types";
 import { AppState } from "../types";
 import { connect } from "../streams/streamUtils";
-import { appSettings$, defaultTileSize } from "../streams/AppSettings$";
+import { appSettings$ } from "../streams/AppSettings$";
 import { dispatchAction } from "../streams/baseStream$";
 import { setNewGame } from "../actions/appActions";
-import { defaultTick } from "../topBar/speedOptions";
 import { GenerationCounter } from "./GenerationCounter";
 import { createEmptyBoardState, createNextHoverState } from "./utils";
 import { getDrawFunctions } from "./drawFunctions";
 import { Wrapper } from "./BoardWrapper";
-
-let boardState: BoardState;
-let [lastX, lastY, currentTickTime, currentTileSize] = [
-  0,
-  0,
-  defaultTick,
-  defaultTileSize
-];
 
 const Board = ({
   tileSize,
@@ -29,7 +20,10 @@ const Board = ({
   tickTime,
   isSoundOn
 }: AppState) => {
-  const canvasRef = React.useRef<HTMLCanvasElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const boardState = useRef<BoardState>(createEmptyBoardState(rows, columns));
+  const lastMousePosition = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
+
   const [hoverState, setHoverState] = useState<ChangedState[]>([]);
   const [[screenWidth, screenHeight], setScreenSize] = useState<
     [number, number]
@@ -37,10 +31,6 @@ const Board = ({
 
   const [generation, setGeneration] = useState<number>(0);
   const [intervalId, setIntervalId] = useState<number>(0);
-
-  if (!boardState) {
-    boardState = createEmptyBoardState(rows, columns);
-  }
 
   const handleMouse = (e: MouseEvent<HTMLCanvasElement>) => {
     if (isPlaying) {
@@ -50,41 +40,33 @@ const Board = ({
     const rect = canvas.getBoundingClientRect();
     const offsetX = e.clientX - rect.left;
     const offsetY = e.clientY - rect.top;
-
-    const curX = (offsetX - (offsetX % tileSize)) / tileSize;
-    const curY = (offsetY - (offsetY % tileSize)) / tileSize;
+    const [x, y] = [
+      (offsetX - (offsetX % tileSize)) / tileSize,
+      (offsetY - (offsetY % tileSize)) / tileSize
+    ];
     if (
       !isPlaying &&
-      (curX !== lastX || curY !== lastY) &&
-      curX < columns &&
-      curY < rows
+      (x !== lastMousePosition.current.x ||
+        y !== lastMousePosition.current.y) &&
+      x < columns &&
+      y < rows
     ) {
       setHoverState(
         createNextHoverState(
-          curX,
-          curY,
+          x,
+          y,
           rows,
           columns,
           selectedShape,
-          boardState,
+          boardState.current,
           hoverState
         )
       );
-      lastX = curX;
-      lastY = curY;
+      lastMousePosition.current = { x, y };
     }
   };
   const removeHoverState = () => {
     if (!isPlaying) setHoverState([]);
-  };
-
-  const screenSizeChangeHandler = () => {
-    if (
-      window.innerWidth !== screenWidth ||
-      window.innerHeight !== screenHeight
-    ) {
-      setScreenSize([window.innerWidth, window.innerHeight]);
-    }
   };
 
   const {
@@ -95,12 +77,12 @@ const Board = ({
 
   useEffect(() => {
     if (newGame) {
-      boardState = createEmptyBoardState(rows, columns);
-      drawFullBoard(boardState);
+      boardState.current = createEmptyBoardState(rows, columns);
+      drawFullBoard(boardState.current);
       removeHoverState();
       dispatchAction(setNewGame({ newGame: false }));
     } else {
-      drawFullBoard(boardState);
+      drawFullBoard(boardState.current);
     }
     // eslint-disable-next-line
   }, [newGame]);
@@ -109,52 +91,64 @@ const Board = ({
     if (hoverState.length) {
       drawHoverState(hoverState);
     } else {
-      drawFullBoard(boardState);
+      drawFullBoard(boardState.current);
     }
     // eslint-disable-next-line
   }, [hoverState]);
 
   useEffect(() => {
     if (generation > 0) {
-      drawNextGeneration(boardState);
+      drawNextGeneration(boardState.current);
     } // eslint-disable-next-line
   }, [generation]);
 
-  useEffect(() => {
-    const startGame = () =>
-      setIntervalId(
-        setInterval(() => setGeneration(generation => generation + 1), tickTime)
-      );
+  const startGame = () =>
+    setIntervalId(
+      setInterval(() => setGeneration(generation => generation + 1), tickTime)
+    );
 
+  useEffect(() => {
+    //Change speed
+    if (isPlaying) {
+      clearInterval(intervalId);
+      startGame();
+    }
+  }, [tickTime]);
+
+  useEffect(() => {
+    if (isPlaying) {
+      clearInterval(intervalId);
+    }
+    drawFullBoard(boardState.current);
+    if (isPlaying) {
+      startGame();
+    }
+  }, [tileSize]);
+
+  useEffect(() => {
+    //start/stop game
     if (isPlaying && !intervalId) {
       startGame();
     } else if (!isPlaying && intervalId) {
       clearInterval(intervalId);
       setIntervalId(0);
-    } else if (isPlaying && intervalId && currentTickTime !== tickTime) {
-      //speed change
-      clearInterval(intervalId);
-      currentTickTime = tickTime;
-      startGame();
-    } else if (currentTileSize !== tileSize) {
-      // Zoom level changed
-      if (isPlaying && intervalId) {
-        clearInterval(intervalId);
-      }
-      currentTileSize = tileSize;
-      drawFullBoard(boardState);
-      if (isPlaying) {
-        startGame();
-      }
     }
     return () => clearInterval(intervalId);
     // eslint-disable-next-line
-  }, [isPlaying, tileSize, tickTime]);
+  }, [isPlaying]);
 
   useEffect(() => {
+    const screenSizeChangeHandler = () => {
+      if (
+        window.innerWidth !== screenWidth ||
+        window.innerHeight !== screenHeight
+      ) {
+        setScreenSize([window.innerWidth, window.innerHeight]);
+      }
+    };
     window.addEventListener("resize", screenSizeChangeHandler);
     return () => window.removeEventListener("resize", screenSizeChangeHandler);
-  });
+  }, []);
 
   return (
     <Wrapper width={screenWidth} height={screenHeight}>
@@ -168,7 +162,9 @@ const Board = ({
         onMouseLeave={removeHoverState}
         onClick={() => {
           if (!isPlaying) {
-            hoverState.forEach(({ y, x, alive }) => (boardState[y][x] = alive));
+            hoverState.forEach(
+              ({ y, x, alive }) => (boardState.current[y][x] = alive)
+            );
           }
         }}
       />
