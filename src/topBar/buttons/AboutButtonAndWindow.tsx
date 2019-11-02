@@ -1,12 +1,12 @@
-import React, { useState } from "react";
-import Typography from "@material-ui/core/Typography/Typography";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import Grid from "@material-ui/core/Grid";
-import IconButton from "@material-ui/core/IconButton";
-import DialogContent from "@material-ui/core/DialogContent";
-import Dialog from "@material-ui/core/Dialog";
-import Button from "@material-ui/core/Button";
-import { Close } from "@material-ui/icons";
+import React, { useState } from 'react';
+import Typography from '@material-ui/core/Typography/Typography';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Grid from '@material-ui/core/Grid';
+import IconButton from '@material-ui/core/IconButton';
+import DialogContent from '@material-ui/core/DialogContent';
+import Dialog from '@material-ui/core/Dialog';
+import Button from '@material-ui/core/Button';
+import { Close } from '@material-ui/icons';
 const aboutText = `The Game of Life, also known simply as Life, is a cellular automaton devised by the British mathematician John Horton Conway in 1970.
 The game is a zero-player game, meaning that its evolution is determined by its initial state, requiring no further input. One interacts with the Game of Life by creating an initial configuration and observing how it evolves, or, for advanced players, by creating patterns with particular properties.`;
 
@@ -20,9 +20,9 @@ export default () => {
     <>
       <Button
         style={{
-          fontFamily: "SF Alien Encounters",
-          background: "rgb(255,255,255, 0.4)",
-          marginLeft: "10px"
+          fontFamily: 'SF Alien Encounters',
+          background: 'rgb(255,255,255, 0.4)',
+          marginLeft: '10px'
         }}
         size="small"
         variant="outlined"
@@ -37,7 +37,7 @@ export default () => {
           <Grid container alignItems="stretch" justify="space-between">
             <Typography variant="h6"> About the Game of Life </Typography>
             <IconButton
-              style={{ position: "absolute", top: 0, right: 0 }}
+              style={{ position: 'absolute', top: 0, right: 0 }}
               aria-label="Close"
               onClick={closeAboutWindow}
             >

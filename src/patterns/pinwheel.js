@@ -1,7 +1,7 @@
 const x = true;
 const o = false;
 export const pinwheel = {
-  name: "pinwheel",
+  name: 'pinwheel',
   pattern: [
     [o, o, o, o, o, o, x, x, o, o, o, o],
     [o, o, o, o, o, o, x, x, o, o, o, o],
@@ -16,5 +16,5 @@ export const pinwheel = {
     [o, o, o, o, x, x, o, o, o, o, o, o],
     [o, o, o, o, x, x, o, o, o, o, o, o]
   ],
-  category: "Oscillators"
+  category: 'Oscillators'
 };

@@ -1,7 +1,7 @@
 const x = true;
 
 export const singleSquare = {
-  name: "single square",
+  name: 'single square',
   pattern: [[x]],
-  category: ""
+  category: ''
 };

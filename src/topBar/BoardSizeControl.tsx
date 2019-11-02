@@ -1,9 +1,8 @@
-import React, { useState } from "react";
-import styled from "styled-components";
-import { dispatchAction } from "../streams/baseStream$";
-import { StyledInput } from "./buttons/StyledInput";
-import { newBoard } from "./actions";
-import { Button } from "@material-ui/core";
+import React, { useState, useContext } from 'react';
+import styled from 'styled-components';
+import { StyledInput } from './buttons/StyledInput';
+import { Button } from '@material-ui/core';
+import { AppContext } from '../AppContext';
 
 const Layout = styled.div`
   display: flex;
@@ -47,19 +46,19 @@ const NumberInput = ({
 };
 
 export const BoardSizeControl = ({
-  rows,
-  columns,
   closeDialog
 }: {
-  rows: number;
-  columns: number;
   closeDialog: () => void;
 }) => {
+  const {
+    state: { rows, columns },
+    dispatch
+  } = useContext(AppContext);
   const [newRows, setNewRows] = useState<number>(rows);
   const [newColumns, setNewColumns] = useState<number>(columns);
   const submit = () => {
     closeDialog();
-    dispatchAction(newBoard({ columns: newColumns, rows: newRows }));
+    dispatch({ type: 'newBoard', columns: newColumns, rows: newRows });
   };
   return (
     <>
@@ -76,7 +75,7 @@ export const BoardSizeControl = ({
         />
         <Button
           style={{
-            fontFamily: "SF Alien Encounters"
+            fontFamily: 'SF Alien Encounters'
           }}
           size="small"
           mini

@@ -1,4 +1,4 @@
-import { BoardState, ChangedState } from "./types";
+import { BoardState, ChangedState } from './types';
 
 export default (currentBoard: BoardState) => {
   const wrapRow1 = (i: number) => (i > 0 ? i - 1 : currentBoard.length - 1);
@@ -31,7 +31,7 @@ export default (currentBoard: BoardState) => {
   currentBoard.forEach((row, rowIndex) =>
     row.forEach((tile, colIndex) => {
       let alive = tile;
-      let livingNeighbours = neighbourFunctions.reduce(
+      const livingNeighbours = neighbourFunctions.reduce(
         (total, neighbourFunc) =>
           neighbourFunc(rowIndex, colIndex) ? total + 1 : total,
         0

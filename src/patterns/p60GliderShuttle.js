@@ -1,7 +1,7 @@
 const x = true;
 const o = false;
 export const p60GliderShuttle = {
-  name: "p60 glider shuttle",
+  name: 'p60 glider shuttle',
   pattern: [
     [
       x,
@@ -249,5 +249,5 @@ export const p60GliderShuttle = {
       x
     ]
   ],
-  category: "Oscillators"
+  category: 'Oscillators'
 };

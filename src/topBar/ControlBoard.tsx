@@ -1,18 +1,15 @@
-import React from "react";
-import AboutWindow from "./buttons/AboutButtonAndWindow";
-import styled from "styled-components";
-import { connect } from "../streams/streamUtils";
-import { appSettings$ } from "../streams/AppSettings$";
-import SpeedSelector from "./selectors/SpeedSelector";
-import ShapesSelector from "./selectors/ShapesSelector";
-import { AppState } from "../types";
-import GitHubButton from "./buttons/GitHubButton";
-import PlayButton from "./buttons/PlayButton";
-import ZoomInButton from "./buttons/ZoomInButton";
-import ZoomOutButton from "./buttons/ZoomOutButton";
-import FullScreenButton from "./buttons/FullScreenButton";
-import NewBoardButtonAndDialog from "./buttons/NewBoardButtonAndDialog";
-import MuteButton from "./buttons/MuteButton";
+import React from 'react';
+import AboutWindow from './buttons/AboutButtonAndWindow';
+import styled from 'styled-components';
+import SpeedSelector from './selectors/SpeedSelector';
+import ShapesSelector from './selectors/ShapesSelector';
+import GitHubButton from './buttons/GitHubButton';
+import PlayButton from './buttons/PlayButton';
+import ZoomInButton from './buttons/ZoomInButton';
+import ZoomOutButton from './buttons/ZoomOutButton';
+import FullScreenButton from './buttons/FullScreenButton';
+import NewBoardButtonAndDialog from './buttons/NewBoardButtonAndDialog';
+import MuteButton from './buttons/MuteButton';
 
 const TopBar = styled.div`
   display: flex;
@@ -25,43 +22,37 @@ const Logo = styled.div`
   text-align: center;
   padding-top: 10px;
   font-size: 50px;
-  font-family: "SF Alien Encounters", sans-serif;
+  font-family: 'SF Alien Encounters', sans-serif;
 `;
 
 const Banner = styled.div`
   background-color: rgb(255, 255, 255, 0);
   max-height: 135px;
+  margin-bottom: 10px;
 `;
 
 const Group = styled.div`
   display: flex;
 `;
 
-const ControlBoard = ({
-  isPlaying,
-  tickTime,
-  selectedShape,
-  rows,
-  columns,
-  isSoundOn
-}: AppState) => {
+export const ControlBoard = () => {
   return (
     <Banner>
       <Logo>GAME OF LIFE </Logo>
       <TopBar>
         <Group>
-          <SpeedSelector tickTime={tickTime} />
-          <ShapesSelector selectedShape={selectedShape} />
+          <SpeedSelector />
+          <ShapesSelector />
         </Group>
         <Group>
-          <PlayButton isPlaying={isPlaying} />
+          <PlayButton />
           <ZoomInButton />
           <ZoomOutButton />
-          <MuteButton isSoundOn={isSoundOn} />
+          <MuteButton />
           <FullScreenButton />
         </Group>
         <Group>
-          <NewBoardButtonAndDialog rows={rows} columns={columns} />
+          <NewBoardButtonAndDialog />
           <AboutWindow />
           <GitHubButton />
         </Group>
@@ -69,8 +60,3 @@ const ControlBoard = ({
     </Banner>
   );
 };
-
-export default connect(
-  ControlBoard,
-  appSettings$
-);

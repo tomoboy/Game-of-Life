@@ -6,7 +6,7 @@ export interface AppState {
   tileSize: number;
   isPlaying: boolean;
   tickTime: number;
-  previewShape?: Shape;
+  previewShape: Shape | null;
   isSoundOn: boolean;
 }
 

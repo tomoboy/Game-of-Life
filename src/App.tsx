@@ -1,24 +1,19 @@
-import React from "react";
-import "typeface-roboto";
-import "./App.css";
+import React, { useReducer } from 'react';
+import 'typeface-roboto';
+import './App.css';
+import { ControlBoard } from './topBar/ControlBoard';
+import { Board } from './board/Board';
+import { PreviewShapePopup } from './ShapePreviewPopup';
+import { reducer } from './AppSettingsReducers';
+import { AppContext, initialState } from './AppContext';
 
-import ControlBoard from "./topBar/ControlBoard";
-import BoardCanvas from "./board/Board";
-import { connect } from "./streams/streamUtils";
-import { appSettings$ } from "./streams/AppSettings$";
-import ShapePreviewPopup from "./streams/ShapePreviewPopup";
-
-const App = () => {
+export const App = () => {
+  const [state, dispatch] = useReducer(reducer, initialState);
   return (
-    <>
+    <AppContext.Provider value={{ state, dispatch }}>
       <ControlBoard />
-      <BoardCanvas />
-      <ShapePreviewPopup />
-    </>
+      <Board />
+      <PreviewShapePopup />
+    </AppContext.Provider>
   );
 };
-
-export default connect(
-  App,
-  appSettings$
-);

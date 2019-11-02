@@ -1,11 +1,10 @@
-import { ValueType } from "react-select/lib/types";
-import { SpeedOption, speedOptions } from "../speedOptions";
-import Select from "react-select";
-import React from "react";
-import { dispatchAction } from "../../streams/baseStream$";
-import { newTickTime } from "../actions";
-import styled from "styled-components";
-import selectorTheme from "./selectorTheme";
+import { ValueType } from 'react-select/lib/types';
+import { SpeedOption, speedOptions } from '../speedOptions';
+import Select from 'react-select';
+import React, { useContext } from 'react';
+import styled from 'styled-components';
+import selectorTheme from './selectorTheme';
+import { AppContext } from '../../AppContext';
 
 const Label = styled.span`
   margin-bottom: 4px;
@@ -16,10 +15,14 @@ const BaseLayout = styled.div`
   width: 100px;
 `;
 
-export default ({ tickTime }: { tickTime: number }) => {
+export default () => {
+  const {
+    state: { tickTime },
+    dispatch
+  } = useContext(AppContext);
   const speedChange = (value: number) => {
     if (value !== tickTime) {
-      dispatchAction(newTickTime({ tickTime: value }));
+      dispatch({ type: 'newTickTime', tickTime: value });
     }
   };
   const selectedSpeedOption =
