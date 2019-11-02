@@ -1,34 +1,34 @@
-import { lightweightSpaceShip } from "./lightweightSpaceShip";
-import { tTetromino } from "./tTetromino";
-import { beehive } from "./beehive";
-import { singleSquare } from "./singleSquare";
-import { acorn } from "./acorn";
-import { straightPolyomino } from "./straightPolyomino";
-import { spaceship2 } from "./spaceship2";
-import { loafer } from "./loafer";
-import { glidersByTheDozen } from "./glidersByTheDozen";
-import { block } from "./block";
-import { boat } from "./boat";
-import { flower } from "./flower";
-import { fPentomino } from "./fPentomino";
-import { bloom } from "./bloom";
-import { homer } from "./homer";
-import { pinwheel } from "./pinwheel";
-import { figureEight } from "./figureEight";
-import { twinBeesShuttle } from "./twinBeesShuttle";
-import { copperhead } from "./copperhead";
-import { tub } from "./tub";
-import { bunnies9 } from "./bunnies9";
-import { bHeptomino } from "./bHeptomino";
-import { piHeptomino } from "./piHeptomino";
-import { pulsar } from "./pulsar";
-import { loaf } from "./loaf";
-import { tumbler } from "./tumbler";
-import { centinal } from "./centinal";
-import { Pentadecathlon } from "./Pentadecathlon";
-import { p60GliderShuttle } from "./p60GliderShuttle";
-import { glider } from "./glider";
-import { Shape, Shapes } from "../types";
+import { lightweightSpaceShip } from './lightweightSpaceShip';
+import { tTetromino } from './tTetromino';
+import { beehive } from './beehive';
+import { singleSquare } from './singleSquare';
+import { acorn } from './acorn';
+import { straightPolyomino } from './straightPolyomino';
+import { spaceship2 } from './spaceship2';
+import { loafer } from './loafer';
+import { glidersByTheDozen } from './glidersByTheDozen';
+import { block } from './block';
+import { boat } from './boat';
+import { flower } from './flower';
+import { fPentomino } from './fPentomino';
+import { bloom } from './bloom';
+import { homer } from './homer';
+import { pinwheel } from './pinwheel';
+import { figureEight } from './figureEight';
+import { twinBeesShuttle } from './twinBeesShuttle';
+import { copperhead } from './copperhead';
+import { tub } from './tub';
+import { bunnies9 } from './bunnies9';
+import { bHeptomino } from './bHeptomino';
+import { piHeptomino } from './piHeptomino';
+import { pulsar } from './pulsar';
+import { loaf } from './loaf';
+import { tumbler } from './tumbler';
+import { centinal } from './centinal';
+import { Pentadecathlon } from './Pentadecathlon';
+import { p60GliderShuttle } from './p60GliderShuttle';
+import { glider } from './glider';
+import { Shape, Shapes } from '../types';
 
 const capitalize = (word: string) =>
   word.charAt(0).toUpperCase() + word.slice(1);
@@ -51,7 +51,7 @@ const calculateProperties = ({
     xMin: Math.floor(columns / 2),
     yMin: Math.floor(rows / 2),
     name: capitalize(name),
-    category: category !== "" ? capitalize(category) + ":" : ""
+    category: category !== '' ? capitalize(category) + ':' : ''
   };
 };
 

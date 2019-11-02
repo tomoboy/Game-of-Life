@@ -1,8 +1,8 @@
-import { CELL_COLOUR } from "../colors";
-import { BoardState, ChangedState } from "./types";
-import { RefObject } from "react";
-import getNextGeneration from "./gameLogic";
-import { playSound } from "../sound";
+import { CELL_COLOUR } from '../colors';
+import { BoardState, ChangedState } from './types';
+import { RefObject } from 'react';
+import getNextGeneration from './gameLogic';
+import { playSound } from '../sound';
 
 export const getDrawFunctions = (
   canvasRef: RefObject<HTMLCanvasElement>,
@@ -11,7 +11,7 @@ export const getDrawFunctions = (
 ) => {
   const drawSquare = (x: number, y: number, alive: boolean) => {
     const canvas = canvasRef.current as HTMLCanvasElement;
-    const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
+    const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
     const actualSize = tileSize - 1;
     ctx.fillStyle = alive ? CELL_COLOUR.living : CELL_COLOUR.dead;
 

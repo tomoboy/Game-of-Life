@@ -1,5 +1,5 @@
-import { Shape } from "../types";
-import { BoardState, ChangedState } from "./types";
+import { Shape } from '../types';
+import { BoardState, ChangedState } from './types';
 
 export const createEmptyBoardState = (rows: number, columns: number) =>
   new Array(rows).fill(false).map(() => new Array(columns).fill(false));
@@ -51,7 +51,7 @@ export const createNextHoverState = (
       );
       if (
         existingChangeIndex >= 0 &&
-        typeof newHoverState[existingChangeIndex] !== "undefined" &&
+        typeof newHoverState[existingChangeIndex] !== 'undefined' &&
         selectedShape.pattern[row][column]
       ) {
         newHoverState[existingChangeIndex].alive =

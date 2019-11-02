@@ -1,7 +1,7 @@
 const x = true;
 const o = false;
 export const loafer = {
-  name: "loafer",
+  name: 'loafer',
   pattern: [
     [o, x, x, o, o, o, o, x, x],
     [x, o, o, x, x, o, x, x, x],
@@ -13,5 +13,5 @@ export const loafer = {
     [o, o, o, o, o, o, x, x, o],
     [o, o, o, o, o, o, o, x, o]
   ],
-  category: "Space ships"
+  category: 'Space ships'
 };

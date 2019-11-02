@@ -1,14 +1,19 @@
-import React from "react";
-import { dispatchAction } from "../../streams/baseStream$";
-import { togglePlay } from "../actions";
-import IconButton from "@material-ui/core/IconButton";
-import { Pause, PlayArrow } from "@material-ui/icons";
+import React, { useContext } from 'react';
+import IconButton from '@material-ui/core/IconButton';
+import { Pause, PlayArrow } from '@material-ui/icons';
+import { AppContext } from '../../AppContext';
 
-export default ({ isPlaying }: { isPlaying: boolean }) => (
-  <IconButton
-    color="inherit"
-    onClick={() => dispatchAction(togglePlay({ isPlaying: !isPlaying }))}
-  >
-    {isPlaying ? <Pause /> : <PlayArrow />}
-  </IconButton>
-);
+export default () => {
+  const {
+    state: { isPlaying },
+    dispatch
+  } = useContext(AppContext);
+  return (
+    <IconButton
+      color="inherit"
+      onClick={() => dispatch({ type: 'togglePlay', isPlaying: !isPlaying })}
+    >
+      {isPlaying ? <Pause /> : <PlayArrow />}
+    </IconButton>
+  );
+};

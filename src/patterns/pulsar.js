@@ -1,7 +1,7 @@
 const x = true;
 const o = false;
 export const pulsar = {
-  name: "pulsar",
+  name: 'pulsar',
   pattern: [
     [o, o, x, x, x, o, o, o, x, x, x, o, o],
     [o, o, o, o, o, o, o, o, o, o, o, o, o],
@@ -17,5 +17,5 @@ export const pulsar = {
     [o, o, o, o, o, o, o, o, o, o, o, o, o],
     [o, o, x, x, x, o, o, o, x, x, x, o, o]
   ],
-  category: "Oscillators"
+  category: 'Oscillators'
 };

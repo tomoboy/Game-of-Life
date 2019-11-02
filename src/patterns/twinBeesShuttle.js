@@ -1,7 +1,7 @@
 const x = true;
 const o = false;
 export const twinBeesShuttle = {
-  name: "Twin bees shuttle",
+  name: 'Twin bees shuttle',
   pattern: [
     [
       o,
@@ -497,5 +497,5 @@ export const twinBeesShuttle = {
       o
     ]
   ],
-  category: "Oscillators"
+  category: 'Oscillators'
 };

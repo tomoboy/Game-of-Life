@@ -1,10 +1,9 @@
-import React, { useEffect } from "react";
-import styled from "styled-components";
-import { Shape } from "../types";
-import { CELL_COLOUR } from "../colors";
-import { connect } from "./streamUtils";
-import { previewShape$ } from "./PreviewShape$";
-const backgroundColor = "whiteSmoke";
+import React, { useEffect, useContext } from 'react';
+import styled from 'styled-components';
+
+import { CELL_COLOUR } from './colors';
+import { AppContext } from './AppContext';
+const backgroundColor = 'whiteSmoke';
 
 const ShapePreviewPopup = styled.div`
   position: fixed;
@@ -18,7 +17,11 @@ const ShapePreviewPopup = styled.div`
 const tileSize = 10;
 const cellSize = 9;
 
-const PreviewShapePopup = ({ previewShape }: { previewShape: Shape }) => {
+export const PreviewShapePopup = () => {
+  const {
+    state: { previewShape }
+  } = useContext(AppContext);
+
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
   const { columns, rows, pattern } =
     previewShape !== null
@@ -27,7 +30,7 @@ const PreviewShapePopup = ({ previewShape }: { previewShape: Shape }) => {
 
   useEffect(() => {
     const canvas = canvasRef.current as HTMLCanvasElement;
-    const ctx = canvas && (canvas.getContext("2d") as CanvasRenderingContext2D);
+    const ctx = canvas && (canvas.getContext('2d') as CanvasRenderingContext2D);
     pattern.forEach((row, y) =>
       row.forEach((alive, x) => {
         ctx.fillStyle = alive ? CELL_COLOUR.living : backgroundColor;
@@ -36,6 +39,7 @@ const PreviewShapePopup = ({ previewShape }: { previewShape: Shape }) => {
     );
   });
 
+  console.log('previewShape', previewShape);
   return previewShape !== null ? (
     <ShapePreviewPopup>
       <canvas
@@ -47,7 +51,3 @@ const PreviewShapePopup = ({ previewShape }: { previewShape: Shape }) => {
     </ShapePreviewPopup>
   ) : null;
 };
-export default connect(
-  PreviewShapePopup,
-  previewShape$
-);

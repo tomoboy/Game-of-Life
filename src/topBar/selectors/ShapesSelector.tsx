@@ -1,12 +1,11 @@
-import { Shape } from "../../types";
-import Select, { components } from "react-select";
-import React from "react";
-import { shapes } from "../../patterns/shapes";
-import { ValueType } from "react-select/lib/types";
-import { dispatchAction } from "../../streams/baseStream$";
-import { changeSelectedShape, previewShape } from "../actions";
-import styled from "styled-components";
-import selectorTheme from "./selectorTheme";
+import { Shape } from '../../types';
+import Select, { components } from 'react-select';
+import React, { useContext, useRef } from 'react';
+import { shapes } from '../../patterns/shapes';
+import { ValueType } from 'react-select/lib/types';
+import styled from 'styled-components';
+import selectorTheme from './selectorTheme';
+import { AppContext } from '../../AppContext';
 
 const shapesOptions = Object.keys(shapes).map((category: string) => ({
   label: category,
@@ -21,17 +20,6 @@ interface ShapeOption {
   label: string;
 }
 
-const CustomOption = (props: any) => (
-  <div
-    onMouseOver={() =>
-      dispatchAction(previewShape({ previewShape: props.value }))
-    }
-    onMouseLeave={() => dispatchAction(previewShape({ previewShape: null }))}
-  >
-    <components.Option {...props} />
-  </div>
-);
-
 const Label = styled.span`
   margin-bottom: 4px;
 `;
@@ -42,7 +30,30 @@ const BaseLayout = styled.div`
   margin-left: 10px;
 `;
 
-export default ({ selectedShape }: { selectedShape: Shape }) => {
+export default () => {
+  const {
+    state: { selectedShape },
+    dispatch
+  } = useContext(AppContext);
+  const currentPreviewShape = useRef<Shape | null>(null);
+
+  const CustomOption = (props: any) => (
+    <div
+      onMouseOver={() => {
+        if (props.value !== currentPreviewShape.current) {
+          currentPreviewShape.current = props.value;
+          dispatch({ type: 'previewShape', previewShape: props.value });
+        }
+      }}
+      onMouseLeave={() => {
+        currentPreviewShape.current = null;
+        dispatch({ type: 'previewShape', previewShape: null });
+      }}
+    >
+      <components.Option {...props} />
+    </div>
+  );
+
   const selectedShapeCategory = shapesOptions.find(
     option => option.label === selectedShape.category
   );
@@ -54,8 +65,10 @@ export default ({ selectedShape }: { selectedShape: Shape }) => {
 
   const onChange = (newSelectedShape: Shape) => {
     if (newSelectedShape.name !== selectedShape.name) {
-      dispatchAction(changeSelectedShape({ shape: newSelectedShape }));
-      dispatchAction(previewShape({ previewShape: null }));
+      dispatch({
+        type: 'changeSelectedShape',
+        selectedShape: newSelectedShape
+      });
     }
   };
 
@@ -76,9 +89,9 @@ export default ({ selectedShape }: { selectedShape: Shape }) => {
         styles={{
           groupHeading: base => ({
             ...base,
-            fontSize: "90%",
+            fontSize: '90%',
             fontWeight: 400,
-            color: "#7c006e"
+            color: '#7c006e'
           })
         }}
       />

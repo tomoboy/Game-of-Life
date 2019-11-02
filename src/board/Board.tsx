@@ -1,25 +1,32 @@
-import React, { MouseEvent, useEffect, useState, useRef } from "react";
-import { ChangedState, BoardState } from "./types";
-import { AppState } from "../types";
-import { connect } from "../streams/streamUtils";
-import { appSettings$ } from "../streams/AppSettings$";
-import { dispatchAction } from "../streams/baseStream$";
-import { setNewGame } from "../actions/appActions";
-import { GenerationCounter } from "./GenerationCounter";
-import { createEmptyBoardState, createNextHoverState } from "./utils";
-import { getDrawFunctions } from "./drawFunctions";
-import { Wrapper } from "./BoardWrapper";
+import React, {
+  MouseEvent,
+  useEffect,
+  useState,
+  useRef,
+  useContext
+} from 'react';
+import { ChangedState, BoardState } from './types';
+import { GenerationCounter } from './GenerationCounter';
+import { createEmptyBoardState, createNextHoverState } from './utils';
+import { getDrawFunctions } from './drawFunctions';
+import { Wrapper } from './BoardWrapper';
+import { AppContext } from '../AppContext';
 
-const Board = ({
-  tileSize,
-  isPlaying,
-  rows,
-  columns,
-  newGame,
-  selectedShape,
-  tickTime,
-  isSoundOn
-}: AppState) => {
+export const Board = () => {
+  const {
+    state: {
+      tileSize,
+      isPlaying,
+      rows,
+      columns,
+      newGame,
+      selectedShape,
+      tickTime,
+      isSoundOn
+    },
+    dispatch
+  } = useContext(AppContext);
+
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const boardState = useRef<BoardState>(createEmptyBoardState(rows, columns));
   const lastMousePosition = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
@@ -80,7 +87,8 @@ const Board = ({
       boardState.current = createEmptyBoardState(rows, columns);
       drawFullBoard(boardState.current);
       removeHoverState();
-      dispatchAction(setNewGame({ newGame: false }));
+      setGeneration(0);
+      dispatch({ type: 'setNewGame', newGame: false });
     } else {
       drawFullBoard(boardState.current);
     }
@@ -146,8 +154,8 @@ const Board = ({
         setScreenSize([window.innerWidth, window.innerHeight]);
       }
     };
-    window.addEventListener("resize", screenSizeChangeHandler);
-    return () => window.removeEventListener("resize", screenSizeChangeHandler);
+    window.addEventListener('resize', screenSizeChangeHandler);
+    return () => window.removeEventListener('resize', screenSizeChangeHandler);
   }, []);
 
   return (
@@ -171,8 +179,3 @@ const Board = ({
     </Wrapper>
   );
 };
-
-export default connect(
-  Board,
-  appSettings$
-);

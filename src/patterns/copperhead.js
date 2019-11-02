@@ -1,7 +1,7 @@
 const x = true;
 const o = false;
 export const copperhead = {
-  name: "copperhead",
+  name: 'copperhead',
   pattern: [
     [o, o, o, o, x, x, o, o, o, o],
     [o, o, o, x, x, x, x, o, o, o],
@@ -17,5 +17,5 @@ export const copperhead = {
     [o, o, o, o, x, x, o, o, o, o],
     [o, o, o, o, x, x, o, o, o, o]
   ],
-  category: "Space ships"
+  category: 'Space ships'
 };

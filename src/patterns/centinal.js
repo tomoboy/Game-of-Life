@@ -1,7 +1,7 @@
 const x = true;
 const o = false;
 export const centinal = {
-  name: "centinal",
+  name: 'centinal',
   pattern: [
     [
       x,
@@ -922,5 +922,5 @@ export const centinal = {
       x
     ]
   ],
-  category: "Oscillators"
+  category: 'Oscillators'
 };
