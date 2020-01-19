@@ -8,7 +8,11 @@ import React, {
 import { ChangedState, BoardState } from './types';
 import { GenerationCounter } from './GenerationCounter';
 import { createEmptyBoardState, createNextHoverState } from './utils';
-import { getDrawFunctions } from './drawFunctions';
+import {
+  drawFullBoard,
+  drawHoverState,
+  drawNextGeneration
+} from './drawFunctions';
 import { Wrapper } from './BoardWrapper';
 import { AppContext } from '../AppContext';
 
@@ -72,41 +76,45 @@ export const Board = () => {
       lastMousePosition.current = { x, y };
     }
   };
+
   const removeHoverState = () => {
     if (!isPlaying) setHoverState([]);
   };
 
-  const {
-    drawFullBoard,
-    drawHoverState,
-    drawNextGeneration
-  } = getDrawFunctions(canvasRef, tileSize, isSoundOn);
+  const drawFunctionArgs = {
+    canvasRef,
+    tileSize,
+    isSoundOn: true,
+    boardState: boardState.current,
+    generation,
+    hoverState
+  };
 
   useEffect(() => {
     if (newGame) {
       boardState.current = createEmptyBoardState(rows, columns);
-      drawFullBoard(boardState.current);
+      drawFullBoard(drawFunctionArgs);
       removeHoverState();
       setGeneration(0);
       dispatch({ type: 'setNewGame', newGame: false });
     } else {
-      drawFullBoard(boardState.current);
+      drawFullBoard(drawFunctionArgs);
     }
     // eslint-disable-next-line
   }, [newGame]);
 
   useEffect(() => {
     if (hoverState.length) {
-      drawHoverState(hoverState);
+      drawHoverState(drawFunctionArgs);
     } else {
-      drawFullBoard(boardState.current);
+      drawFullBoard(drawFunctionArgs);
     }
     // eslint-disable-next-line
   }, [hoverState]);
 
   useEffect(() => {
     if (generation > 0) {
-      drawNextGeneration(boardState.current);
+      drawNextGeneration(drawFunctionArgs);
     } // eslint-disable-next-line
   }, [generation]);
 
@@ -127,7 +135,7 @@ export const Board = () => {
     if (isPlaying) {
       clearInterval(intervalId);
     }
-    drawFullBoard(boardState.current);
+    drawFullBoard(drawFunctionArgs);
     if (isPlaying) {
       startGame();
     }

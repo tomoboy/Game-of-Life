@@ -1,4 +1,5 @@
 import { AppState, Shape } from './types';
+import Tone from 'tone';
 export type Action =
   | { type: 'setNewGame'; newGame: boolean }
   | { type: 'togglePlay'; isPlaying: boolean }
@@ -17,6 +18,7 @@ export const reducer = (state: AppState, action: Action): AppState => {
         newGame: action.newGame
       };
     case 'togglePlay':
+      Tone.Master.mute = !action.isPlaying; // bug where sometimes a sound would continue to play
       return {
         ...state,
         isPlaying: action.isPlaying
