@@ -40,8 +40,8 @@ export const getDrawFunctions = (
       boardState[y][x] = alive;
       drawSquare(x, y, alive);
       if (alive) {
-        coordinates.push([x, y])
-      };
+        coordinates.push([x, y]);
+      }
     });
     /* Can be replaced with playSoundNotes different effect*/
     playSoundNotes(coordinates, boardState.length, boardState[0].length);
