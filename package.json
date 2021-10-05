@@ -6,6 +6,7 @@
     "@material-ui/core": "^3.7.0",
     "@material-ui/icons": "^3.0.1",
     "@types/node": "^12.7.12",
+    "clusters": "^0.0.4",
     "react": "^16.8.6",
     "react-device-detect": "^1.6.1",
     "react-dom": "^16.8.6",

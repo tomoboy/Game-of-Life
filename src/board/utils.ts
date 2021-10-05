@@ -1,8 +1,24 @@
 import { Shape } from '../types';
-import { BoardState, ChangedState } from './types';
+import { BoardState, ChangedState, HeatMap, LifeStatus } from './types';
+import { HISTORY_LENGTH } from '../consts';
 
-export const createEmptyBoardState = (rows: number, columns: number) =>
-  new Array(rows).fill(false).map(() => new Array(columns).fill(false));
+const createBoard = <T>(rows: number, columns: number, value: T) =>
+  new Array(rows).fill(false).map(() => new Array(columns).fill(value));
+
+export const createEmptyBoardState = (
+  rows: number,
+  columns: number
+): BoardState => {
+  const firstGeneration = createBoard<boolean>(rows, columns, false);
+  const heatMap = createBoard<number>(rows, columns, 0);
+  const history = [
+    firstGeneration,
+    ...Array.from(Array(HISTORY_LENGTH - 1), () =>
+      createBoard<boolean>(rows, columns, false)
+    )
+  ];
+  return { currentBoard: firstGeneration, heatMap, history };
+};
 
 const wrap = (index: number, limit: number) => {
   if (index < 0) {
@@ -15,14 +31,14 @@ const wrap = (index: number, limit: number) => {
 };
 const changesDifferentFromBoard = (
   changes: ChangedState[],
-  boardState: BoardState
+  { currentBoard }: BoardState
 ) =>
   changes
-    .filter(({ y, x, alive }) => alive !== boardState[y][x])
+    .filter(({ y, x, alive }) => alive !== currentBoard[y][x])
     .map(({ y, x }) => ({
       y,
       x,
-      alive: boardState[y][x]
+      alive: currentBoard[y][x]
     }));
 
 export const createNextHoverState = (
@@ -66,3 +82,13 @@ export const createNextHoverState = (
     }
   return newHoverState;
 };
+
+export const getHeatMap = ({ history }: BoardState): HeatMap =>
+  history.reduce((heatMap: HeatMap, board: LifeStatus) => {
+    board.forEach((row, rowIndex) =>
+      row.forEach(
+        (cell, colIndex) => (heatMap[rowIndex][colIndex] += cell ? 1 : 0)
+      )
+    );
+    return heatMap;
+  }, createBoard<number>(history[0].length, history[0][0].length, 0));

@@ -3,11 +3,16 @@ import React, {
   useEffect,
   useState,
   useRef,
-  useContext
+  useContext,
+  RefObject
 } from 'react';
 import { ChangedState, BoardState } from './types';
 import { GenerationCounter } from './GenerationCounter';
-import { createEmptyBoardState, createNextHoverState } from './utils';
+import {
+  createEmptyBoardState,
+  createNextHoverState,
+  getHeatMap
+} from './utils';
 import {
   drawFullBoard,
   drawHoverState,
@@ -15,6 +20,11 @@ import {
 } from './drawFunctions';
 import { Wrapper } from './BoardWrapper';
 import { AppContext } from '../AppContext';
+import { getNextGeneration } from './gameLogic';
+
+const getCellLifeStatus = (boardState: RefObject<BoardState>) => {
+  return boardState.current && boardState.current.currentBoard;
+};
 
 export const Board = () => {
   const {
@@ -114,7 +124,23 @@ export const Board = () => {
 
   useEffect(() => {
     if (generation > 0) {
-      drawNextGeneration(drawFunctionArgs);
+      const { currentBoard, history, changes } = getNextGeneration(
+        boardState.current,
+        generation
+      );
+      const newBoardState = {
+        ...boardState.current,
+        currentBoard,
+        history,
+        heatMap: getHeatMap(boardState.current)
+      };
+      boardState.current = newBoardState;
+
+      drawNextGeneration({
+        ...drawFunctionArgs,
+        boardState: newBoardState,
+        changes
+      });
     } // eslint-disable-next-line
   }, [generation]);
 
@@ -177,9 +203,10 @@ export const Board = () => {
         onMouseMove={handleMouse}
         onMouseLeave={removeHoverState}
         onClick={() => {
-          if (!isPlaying) {
+          if (!isPlaying && getCellLifeStatus(boardState)) {
             hoverState.forEach(
-              ({ y, x, alive }) => (boardState.current[y][x] = alive)
+              ({ y, x, alive }) =>
+                (getCellLifeStatus(boardState)![y][x] = alive)
             );
           }
         }}

@@ -48,6 +48,7 @@ export const reducer = (state: AppState, action: Action): AppState => {
         isPlaying: false
       };
     case 'toggleSound':
+      Tone.Master.mute = !action.isSoundOn;
       return {
         ...state,
         isSoundOn: action.isSoundOn

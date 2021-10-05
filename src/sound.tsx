@@ -11,13 +11,20 @@ const em7 = ['E', 'G', 'B', 'D'];
 const am7 = ['A', 'C', 'E', 'G'];
 const bdim = ['B', 'D', 'F', 'A'];
 
+const getOctave = (octave: number) =>
+  octave >= MIN_OCTAVE && octave <= MAX_OCTAVE
+    ? octave
+    : octave < MIN_OCTAVE
+    ? MIN_OCTAVE
+    : MAX_OCTAVE;
+
+const MIN_OCTAVE = 2;
+const MAX_OCTAVE = 5;
 const getNote = (y: number, rows: number, scale: Array<string>): string => {
   /* scale defines which notes exist on the y axis*/
-  let octave = Math.floor((y % rows) / scale.length);
-  if (octave > 4) {
-    octave = 4;
-  }
-  return `${scale[y % scale.length]}${octave}`;
+  return `${scale[y % scale.length]}${getOctave(
+    Math.floor((y % rows) / scale.length)
+  )}`;
 };
 
 const playSoundNotes = (
@@ -51,11 +58,11 @@ const playSoundChords = (
     }
   }
 
-  const notes: any = coordinates
-    .filter((tuple, index) => index % 5 === 0)
-    .map(tuple => getNote(tuple[1], rows, progression[progression_index]));
+  const notes: any = coordinates.map(([y, x]) =>
+    getNote(y, rows, progression[progression_index])
+  );
 
-  poly.triggerAttackRelease(notes.slice(0, 5), '16n');
+  poly.triggerAttackRelease(notes, '32n');
 };
 
 export { playSoundChords, playSoundNotes };

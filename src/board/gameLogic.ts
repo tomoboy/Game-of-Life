@@ -1,6 +1,15 @@
 import { BoardState, ChangedState } from './types';
+import { HISTORY_LENGTH } from '../consts';
 
-export default (currentBoard: BoardState) => {
+const isAlive = (lifeStatus: boolean, numberOfLivingNeighbours: number) =>
+  (!lifeStatus && numberOfLivingNeighbours === 3) ||
+  (lifeStatus &&
+    (numberOfLivingNeighbours === 3 || numberOfLivingNeighbours === 2));
+
+export const getNextGeneration = (
+  { currentBoard, history, heatMap }: BoardState,
+  generation: number
+) => {
   const wrapRow1 = (i: number) => (i > 0 ? i - 1 : currentBoard.length - 1);
   const wrapRow2 = (i: number) => (i === currentBoard.length - 1 ? 0 : i + 1);
   const wrapCol1 = (j: number) => (j > 0 ? j - 1 : currentBoard[0].length - 1);
@@ -27,27 +36,27 @@ export default (currentBoard: BoardState) => {
     right
   ];
   const changes: ChangedState[] = [];
-
+  const newBoard = history[generation % HISTORY_LENGTH];
   currentBoard.forEach((row, rowIndex) =>
-    row.forEach((tile, colIndex) => {
-      let alive = tile;
-      const livingNeighbours = neighbourFunctions.reduce(
-        (total, neighbourFunc) =>
-          neighbourFunc(rowIndex, colIndex) ? total + 1 : total,
-        0
+    row.forEach((cell, colIndex) => {
+      const lifeStatus = isAlive(
+        cell,
+        neighbourFunctions.reduce(
+          (total, neighbourFunc) =>
+            neighbourFunc(rowIndex, colIndex) ? total + 1 : total,
+          0
+        )
       );
       if (
-        (alive && livingNeighbours < 2) ||
-        (alive && livingNeighbours > 3) ||
-        (!alive && livingNeighbours === 3)
+        lifeStatus !== cell ||
+        heatMap[rowIndex][colIndex] ||
+        currentBoard[rowIndex][colIndex]
       ) {
-        //underpopulation or overpopulation or reproduction
-        alive = !alive;
+        changes.push({ y: rowIndex, x: colIndex, alive: lifeStatus });
       }
-      if (tile !== alive) {
-        changes.push({ y: rowIndex, x: colIndex, alive });
-      }
+      newBoard[rowIndex][colIndex] = lifeStatus;
     })
   );
-  return changes;
+
+  return { currentBoard: newBoard, history, changes };
 };

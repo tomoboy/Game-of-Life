@@ -4,12 +4,12 @@ import { AppState } from './types';
 import { Action } from './AppSettingsReducers';
 import { defaultTick } from './topBar/speedOptions';
 
-export const defaultTileSize = 9;
-const acorn = shapes['Methuselah:'][0];
+export const defaultTileSize = 20;
+const glider = shapes['Space ships:'][1];
 export const initialState: AppState = {
-  columns: 100,
-  rows: 88,
-  selectedShape: acorn,
+  columns: 75,
+  rows: 50,
+  selectedShape: glider,
   newGame: false,
   tileSize: defaultTileSize,
   isPlaying: false,

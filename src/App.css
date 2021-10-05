@@ -8,8 +8,7 @@
 }
 
 ul {
-    padding: 0;
-
+  padding: 0;
 }
 .App-header {
   background-color: #282c34;
@@ -27,16 +26,16 @@ ul {
 }
 
 @font-face {
-  font-family: 'AlienEncounters';
+  font-family: "AlienEncounters";
   font-style: normal;
   font-weight: 400;
-  src: local('SFAlienEncounter'),
-  url(./alienEncounters/SFAlienEncounters.ttf) format('ttf');
+  src: local("SFAlienEncounter"),
+    url(./alienEncounters/SFAlienEncounters.ttf) format("ttf");
 }
 
 html {
   background-size: cover;
-  background-image: url("./aesthetic.jpg");
+  background-image: url("./saltDoor_web.jpg");
   background-repeat: no-repeat;
   width: 100%;
   height: 100%;
