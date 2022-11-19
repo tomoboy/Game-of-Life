@@ -9,7 +9,7 @@
     "react": "^16.8.6",
     "react-device-detect": "^1.6.1",
     "react-dom": "^16.8.6",
-    "react-scripts": "^3.0.1",
+    "react-scripts": "^5.0.1",
     "react-select": "^2.2.0",
     "serve": "^11.1.0",
     "styled-components": "^4.1.3",
